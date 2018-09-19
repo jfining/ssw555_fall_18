@@ -6,7 +6,7 @@ Project repository for SSW555 Fall 2018
 
 ## Install
 - [JDK 1.7](http://www.oracle.com/technetwork/java/javase/downloads/java-archive-downloads-javase7-521261.html)
-- [Maven](https://maven.apache.org/download.cgi) - [Additional window config](https://maven.apache.org/install.html)
+- [Maven](https://maven.apache.org/download.cgi) - [Additional window config](https://maven.apache.org/install.html) (Make sure  you have created environment variable JAVA_HOME that point to your JDK folder)
 - [Eclipse](https://www.eclipse.org/downloads/) - Pick Java flavor during installation prompt. That will add maven support.
 
 ## Import code
