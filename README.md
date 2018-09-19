@@ -14,21 +14,19 @@ Project repository for SSW555 Fall 2018
 
 ## Test project is working with command
 - Change current directory to 'ssw555_fall_18'
-- Type following commands. There should be no errors during executions of the commands.
+- Type following commands. There should be no errors during execution of the commands.
   - ```mvn package```
   - ```cd target```
   - ```java -jar gedcom-disk-1.0-SNAPSHOT.jar "../Submissions/Project3/proj03test.ged"```
 
-## Import project
-- Get code
-- Import project to Maven
-  - File
-  - Select 'Maven' from the list
-  - 'Existing Maven Projects'
-  - Next
-  - Then select root of the project 'ssw555_fall_18'
-  - 'Select folder'
-  - 'Finish'
+## Import project Eclipse
+- File
+- Select 'Maven' from the list
+- 'Existing Maven Projects'
+- Next
+- Then select root of the project 'ssw555_fall_18'
+- 'Select folder'
+- 'Finish'
 
 ## Add debug configuration
 - Right click on "App" class and then click debug(This will add configuration)
