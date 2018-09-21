@@ -3,6 +3,9 @@ package com.rasodu.gedcom;
 import com.rasodu.gedcom.Infrastructure.GedComDataSetFile;
 import com.rasodu.gedcom.Infrastructure.TablePrinter;
 import com.rasodu.gedcom.Processor.ListToTableData;
+import com.rasodu.gedcom.Validation.FamilyValidator;
+import com.rasodu.gedcom.Validation.GeneralValidator;
+import com.rasodu.gedcom.Validation.IndividualValidator;
 import com.rasodu.gedcom.core.Family;
 import com.rasodu.gedcom.core.IGedcomDataset;
 import com.rasodu.gedcom.core.Individual;
@@ -30,10 +33,24 @@ public class App {
             IGedcomDataset dataSet = GedComDataSetFile.GetInstance();
             List<Individual> individuals = dataSet.GetAllIndividuals();
             List<Family> families = dataSet.GetAllFamilies();
+            
+            //Validate data
+            GeneralValidator gv = new GeneralValidator(families, individuals);
+            FamilyValidator fv = new FamilyValidator(families, individuals);
+            IndividualValidator iv = new IndividualValidator(families, individuals);
+            
+            boolean generalValid = gv.validate();
+            System.out.println("General Validation: "+String.valueOf(generalValid));
+            boolean familyValid = fv.validate();
+            System.out.println("Family Validation: "+String.valueOf(familyValid));
+            boolean individualValid = iv.validate();
+            System.out.println("Individual Validation: "+String.valueOf(individualValid));
+            
             //get data to print
             ListToTableData lstotd = new ListToTableData(individuals, families);
             List<List<String>> individualsTable = lstotd.GetIndivisualTableData();
             List<List<String>> familiesTable = lstotd.GetFamilyTableData();
+            
             //print data
             TablePrinter tp = new TablePrinter();
             tp.PrintTable(individualsTable);
