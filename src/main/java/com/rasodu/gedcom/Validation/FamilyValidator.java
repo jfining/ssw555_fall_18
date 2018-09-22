@@ -113,6 +113,9 @@ public class FamilyValidator implements IValidator {
 					continue;
 				}
 				Family fam = findFamily.get(famId);
+				if(fam.Divorced == null) {
+					continue;
+				}
 				if(fam.Divorced.compareTo(ind.Death) > 0){
 					valid = false;
 					log.error("US06", ind, fam, "Individual divorced after death.");
