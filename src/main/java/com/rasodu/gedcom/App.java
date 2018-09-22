@@ -37,9 +37,9 @@ public class App {
             
             //Validate data
             GedLogger log = new GedLogger();
-            GeneralValidator gv = new GeneralValidator(families, individuals);
+            GeneralValidator gv = new GeneralValidator(families, individuals, log);
             FamilyValidator fv = new FamilyValidator(families, individuals, log);
-            IndividualValidator iv = new IndividualValidator(families, individuals);
+            IndividualValidator iv = new IndividualValidator(families, individuals, log);
             
             boolean generalValid = gv.validate();
             System.out.println("General Validation: "+String.valueOf(generalValid));
