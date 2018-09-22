@@ -1,6 +1,8 @@
 package com.rasodu.gedcom.Validation;
 
 import java.util.List;
+import java.util.Calendar;
+import java.util.Date;
 
 import com.rasodu.gedcom.Utils.GedLogger;
 import com.rasodu.gedcom.core.Family;
@@ -54,11 +56,43 @@ public class IndividualValidator implements IValidator {
 
 	}
 
+	
+	//US07
+	private boolean lessThan150YearsOld() {
+		String userStory = "US07";
+		boolean valid = true;
+		Calendar calendar = Calendar.getInstance();
+		Date today = new Date();
+		
+		for(Individual ind : individualList) {
+			if(ind.Id != null) {
+				if(ind.Birthday != null) {
+					calendar.setTime(ind.Birthday);
+					calendar.add(Calendar.YEAR, 150);
+					if(ind.Death == null) {
+						if(calendar.getTime().before(today)) {
+							log.error(userStory, ind, null, "Individual " + ind.Id + " is living and over 150 years old");
+							valid = false;
+						}
+					} else {
+						if(calendar.getTime().before(ind.Death)) {
+							log.error(userStory, ind, null, "Individual " + ind.Id + " is dead and over 150 years old");
+							valid = false;
+						}
+					}
+				}
+			}
+		}
+		return valid;
+	}
 	@Override
 	public boolean validate() {
 		boolean allTestsValid = true;
 
 		if (!birthBeforeDeath()) {
+			allTestsValid = false;
+		}
+		if(!lessThan150YearsOld()) {
 			allTestsValid = false;
 		}
 
