@@ -3,6 +3,7 @@ package com.rasodu.gedcom;
 import com.rasodu.gedcom.Infrastructure.GedComDataSetFile;
 import com.rasodu.gedcom.Infrastructure.TablePrinter;
 import com.rasodu.gedcom.Processor.ListToTableData;
+import com.rasodu.gedcom.Utils.GedLogger;
 import com.rasodu.gedcom.Validation.FamilyValidator;
 import com.rasodu.gedcom.Validation.GeneralValidator;
 import com.rasodu.gedcom.Validation.IndividualValidator;
@@ -35,8 +36,9 @@ public class App {
             List<Family> families = dataSet.GetAllFamilies();
             
             //Validate data
+            GedLogger log = new GedLogger();
             GeneralValidator gv = new GeneralValidator(families, individuals);
-            FamilyValidator fv = new FamilyValidator(families, individuals);
+            FamilyValidator fv = new FamilyValidator(families, individuals, log);
             IndividualValidator iv = new IndividualValidator(families, individuals);
             
             boolean generalValid = gv.validate();
