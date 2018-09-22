@@ -10,15 +10,16 @@ import com.rasodu.gedcom.core.Individual;
 
 public class IndividualValidator implements IValidator {
 
-	GedLogger log = new GedLogger();
+	GedLogger log;
 
 	List<Family> familyList;
 	List<Individual> individualList;
 
-	public IndividualValidator(List<Family> familyList, List<Individual> individualList) {
+	public IndividualValidator(List<Family> familyList, List<Individual> individualList, GedLogger log) {
 		super();
 		this.familyList = familyList;
 		this.individualList = individualList;
+		this.log = log;
 	}
 
 	public List<Family> getFamilyList() {

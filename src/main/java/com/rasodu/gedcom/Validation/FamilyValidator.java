@@ -2,7 +2,9 @@ package com.rasodu.gedcom.Validation;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.rasodu.gedcom.Utils.GedLogger;
 import com.rasodu.gedcom.core.Family;
@@ -10,15 +12,17 @@ import com.rasodu.gedcom.core.Individual;
 
 public class FamilyValidator implements IValidator {
 
-	GedLogger log = new GedLogger();
+
+	GedLogger log;
 
 	List<Family> familyList;
 	List<Individual> individualList;
-
-	public FamilyValidator(List<Family> familyList, List<Individual> individualList) {
+	
+	public FamilyValidator(List<Family> familyList, List<Individual> individualList, GedLogger log) {
 		super();
 		this.familyList = familyList;
 		this.individualList = individualList;
+		this.log = log;
 	}
 
 	public List<Family> getFamilyList() {
@@ -38,7 +42,6 @@ public class FamilyValidator implements IValidator {
 	}
 
 	// US02
-
 	public boolean birthBeforeMarriage() {
 		String userStory = "US02";
 		boolean valid = true;
@@ -92,6 +95,33 @@ public class FamilyValidator implements IValidator {
 		return valid;
 	}
 
+	//US06
+	public boolean noDivorceAfterDeath() {
+		//index family by id
+		Map<String, Family> findFamily = new HashMap<String, Family>();
+		for(Family fam : familyList) {
+			findFamily.put(fam.Id, fam);
+		}
+		//find family with anomaly
+		boolean valid = true;
+		for(Individual ind : individualList) {
+			if(ind.Death == null) {
+				continue;
+			}
+			for(String famId : ind.SpouseInFamily) {
+				if(!findFamily.containsKey(famId)) {
+					continue;
+				}
+				Family fam = findFamily.get(famId);
+				if(fam.Divorced.compareTo(ind.Death) > 0){
+					valid = false;
+					log.error("US06", ind, fam, "Individual divorced after death.");
+				}
+			}
+		}
+		return valid;
+	}
+
 	@Override
 	public boolean validate() {
 		boolean allTestsValid = true;
@@ -100,6 +130,9 @@ public class FamilyValidator implements IValidator {
 			allTestsValid = false;
 		}
 		if (!MarriageBeforeDeath()) {
+			allTestsValid = false;
+		}
+		if (!noDivorceAfterDeath()) {
 			allTestsValid = false;
 		}
 
