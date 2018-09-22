@@ -10,5 +10,5 @@ public class Family {
     public Date Divorced = null;
     public String HusbandId = null;
     public String WifeId = null;
-    public List<String> Children = new ArrayList<String>();
+    public List<String> ChildrenIds = new ArrayList<String>();
 }
