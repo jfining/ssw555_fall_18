@@ -91,11 +91,11 @@ public class ListToTableData {
             row.add(IndivisualIdToName(family.HusbandId));
             row.add(family.WifeId);
             row.add(IndivisualIdToName(family.WifeId));
-            if (family.Children.isEmpty()) {
+            if (family.ChildrenIds.isEmpty()) {
                 row.add("N/A");
             } else {
                 String children = "";
-                for (String childId : family.Children) {
+                for (String childId : family.ChildrenIds) {
                     children += childId + ";";
                 }
                 row.add(children);

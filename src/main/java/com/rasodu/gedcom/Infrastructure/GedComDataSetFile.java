@@ -151,7 +151,7 @@ class TreeNodeToItem {
                         family.WifeId = childNode.GetArguments();
                         break;
                     case "CHIL":
-                        family.Children.add(childNode.GetArguments());
+                        family.ChildrenIds.add(childNode.GetArguments());
                         break;
                 }
             }
