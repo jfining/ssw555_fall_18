@@ -45,7 +45,7 @@ public class IndividualValidator implements IValidator {
 		boolean valid = true;
 
 		for (Individual ind : individualList) {
-			if (ind.Id != null) {
+			if (ind.Id != null && ind.Birthday != null && ind.Death != null) {
 				if (ind.Birthday.after(ind.Death)) {
 					log.error(userStory, ind, null, "Death date is before birthday");
 					valid = false;
