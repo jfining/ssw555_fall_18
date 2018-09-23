@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/jfining/ssw555_fall_18.svg)](https://travis-ci.org/jfining/ssw555_fall_18)
+[![Build Status](https://travis-ci.org/jfining/ssw555_fall_18.svg?branch=master)](https://travis-ci.org/jfining/ssw555_fall_18)
 
 # ssw555_fall_18
 Project repository for SSW555 Fall 2018
