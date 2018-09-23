@@ -41,13 +41,13 @@ public class GeneralValidator implements IValidator {
 		for (Family fam : familyList) {
 			if (fam.Divorced != null) {
 				if( fam.Divorced.after(currentDate)) {
-					log.error(userStory, null, fam, "Divorced Date is before current date.");
+					log.error(userStory, null, fam, "Divorced Date is after current date.");
 					valid = false;
 				}
 			}
 			if (fam.Married != null) {
 				if( fam.Married.after(currentDate)) {
-					log.error(userStory, null, fam, "Marriage Date is before current date.");
+					log.error(userStory, null, fam, "Marriage Date is after current date.");
 					valid = false;
 				}
 			}
@@ -60,13 +60,13 @@ public class GeneralValidator implements IValidator {
 			}
 			else {
 				if (ind.Birthday.after(currentDate)) {
-					log.error(userStory, ind, null, "Birth Date is before current date.");
+					log.error(userStory, ind, null, "Birth Date is after current date.");
 					valid = false;
 				}
 			}
 			if (ind.Death != null) {
 				if (ind.Death.after(currentDate)) {
-					log.error(userStory, ind, null, "Death Date is before current date.");
+					log.error(userStory, ind, null, "Death Date is after current date.");
 					valid = false;
 				}
 			}

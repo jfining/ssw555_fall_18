@@ -69,6 +69,22 @@ public class FamilyValidator implements IValidator {
 
 	}
 	
+	//US04
+	public boolean noDivorceBeforeMarriage() {
+		String userStory = "US04";
+		boolean valid = true;
+		
+		for (Family fam : familyList) {
+			if (fam.Divorced != null) {
+				if( fam.Married.after(fam.Divorced)) {
+					log.error(userStory, null, fam, "Divorce Date is before marriage date.");
+					valid = false;
+				}
+			}
+		}
+		return valid;
+	}
+	
 	//US05
 	public boolean MarriageBeforeDeath() {
 		String userStory = "US05";
@@ -136,6 +152,9 @@ public class FamilyValidator implements IValidator {
 			allTestsValid = false;
 		}
 		if (!noDivorceAfterDeath()) {
+			allTestsValid = false;
+		}
+		if (!noDivorceBeforeMarriage()) {
 			allTestsValid = false;
 		}
 
