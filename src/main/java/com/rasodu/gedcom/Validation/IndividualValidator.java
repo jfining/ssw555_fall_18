@@ -1,8 +1,10 @@
 package com.rasodu.gedcom.Validation;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import com.rasodu.gedcom.Utils.GedLogger;
 import com.rasodu.gedcom.core.Family;
@@ -86,6 +88,43 @@ public class IndividualValidator implements IValidator {
 		}
 		return valid;
 	}
+	
+	//US08
+	private boolean bornBeforeOrAfterMarriage() {
+		Calendar calendar = Calendar.getInstance();
+		//index family by id
+		Map<String, Family> findFamily = new HashMap<String, Family>();
+		for(Family fam : familyList) {
+			findFamily.put(fam.Id, fam);
+		}
+		//find family with anomaly
+		boolean valid = true;
+		for(Individual ind : individualList) {
+			if(ind.Birthday == null) {
+				continue;
+			}
+			for(String famId : ind.ChildOfFamily) {
+				if(!findFamily.containsKey(famId)) {
+					continue;
+				}
+				Family fam = findFamily.get(famId);
+				//logic to check error
+				if(fam.Married != null && ind.Birthday.before(fam.Married)) {
+					valid = false;
+					log.error("US08", ind, fam, "Individual born before marriage.");
+				}
+				else if(fam.Divorced != null) {
+					calendar.setTime(fam.Divorced);
+					calendar.add(Calendar.MONTH, 9);
+					if(ind.Birthday.after(calendar.getTime())) {
+						valid = false;
+						log.error("US08", ind, fam, "Individual born 9 or more months divorce.");
+					}
+				}
+			}
+		}
+		return valid;
+	}
 	@Override
 	public boolean validate() {
 		boolean allTestsValid = true;
@@ -94,6 +133,9 @@ public class IndividualValidator implements IValidator {
 			allTestsValid = false;
 		}
 		if(!lessThan150YearsOld()) {
+			allTestsValid = false;
+		}
+		if(!bornBeforeOrAfterMarriage()) {
 			allTestsValid = false;
 		}
 
