@@ -108,7 +108,7 @@ public class FamilyValidatorTest {
         boolean result = validator.bornBeforeOrAfterMarriage();
         //assert
         verify(logger, Mockito.times(1)).error("US08", ind1, fam, "Individual born before marriage.");
-        verify(logger, Mockito.times(1)).error("US08", ind2, fam, "Individual born 9 or more months divorce.");
+        verify(logger, Mockito.times(1)).error("US08", ind2, fam, "Individual born 9 or more months after divorce.");
         verifyNoMoreInteractions(logger);
         Assert.assertFalse(result);
     }

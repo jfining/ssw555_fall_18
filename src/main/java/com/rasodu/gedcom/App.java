@@ -42,11 +42,11 @@ public class App {
             IndividualValidator iv = new IndividualValidator(families, individuals, log);
             
             boolean generalValid = gv.validate();
-            System.out.println("General Validation: "+String.valueOf(generalValid));
+            System.out.println("General Validation: "+String.valueOf(generalValid) + "\n");
             boolean familyValid = fv.validate();
-            System.out.println("Family Validation: "+String.valueOf(familyValid));
+            System.out.println("Family Validation: "+String.valueOf(familyValid) + "\n");
             boolean individualValid = iv.validate();
-            System.out.println("Individual Validation: "+String.valueOf(individualValid));
+            System.out.println("Individual Validation: "+String.valueOf(individualValid) + "\n");
             
             //get data to print
             ListToTableData lstotd = new ListToTableData(individuals, families);

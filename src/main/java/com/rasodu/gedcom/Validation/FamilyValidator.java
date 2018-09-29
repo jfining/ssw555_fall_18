@@ -48,17 +48,17 @@ public class FamilyValidator implements IValidator {
 
 		for (Family fam : familyList) {
 			for (Individual ind : individualList) {
-				if (fam.Married != null) {
+				if (fam.Married != null && ind.Birthday != null) {
 					if (fam.HusbandId.equals(ind.Id)) {
 						if (fam.Married.before(ind.Birthday)) {
 							log.error(userStory, null, fam, "Marriage is before Husband birthday.");
 							valid = false;
 						}
-						if (fam.WifeId.equals(ind.Id)) {
-							if (fam.Married.before(ind.Birthday)) {
-								log.error(userStory, null, fam, "Marriage is before Wife birthday.");
-								valid = false;
-							}
+					}
+					if (fam.WifeId.equals(ind.Id)) {
+						if (fam.Married.before(ind.Birthday)) {
+							log.error(userStory, null, fam, "Marriage is before Wife birthday.");
+							valid = false;
 						}
 					}
 				}

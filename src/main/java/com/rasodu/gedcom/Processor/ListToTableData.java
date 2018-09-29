@@ -36,9 +36,16 @@ public class ListToTableData {
             row.add(indivisual.Id);
             row.add(indivisual.Name);
             row.add(String.valueOf(indivisual.Gender));
-            row.add(df.format(indivisual.Birthday));
-            LocalDate birthday = indivisual.Birthday.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            if (indivisual.Death == null) {
+            LocalDate birthday = null;
+            if (indivisual.Birthday == null) {
+                row.add("N/A");
+            } else {
+                row.add(df.format(indivisual.Birthday));
+                birthday = indivisual.Birthday.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            }
+            if (indivisual.Birthday == null) {
+                row.add("N/A");
+            } else if (indivisual.Death == null) {
                 row.add(String.valueOf(Period.between(birthday, date).getYears()));
             } else {
                 LocalDate death = indivisual.Death.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
