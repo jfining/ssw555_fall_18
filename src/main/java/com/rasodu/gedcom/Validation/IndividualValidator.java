@@ -59,14 +59,14 @@ public class IndividualValidator implements IValidator {
 
 	}
 
-	
+
 	//US07
 	private boolean lessThan150YearsOld() {
 		String userStory = "US07";
 		boolean valid = true;
 		Calendar calendar = Calendar.getInstance();
 		Date today = new Date();
-		
+
 		for(Individual ind : individualList) {
 			if(ind.Id != null) {
 				if(ind.Birthday != null) {
@@ -88,9 +88,9 @@ public class IndividualValidator implements IValidator {
 		}
 		return valid;
 	}
-	
+
 	//US08
-	private boolean bornBeforeOrAfterMarriage() {
+	public boolean bornBeforeOrAfterMarriage() {
 		Calendar calendar = Calendar.getInstance();
 		//index family by id
 		Map<String, Family> findFamily = new HashMap<String, Family>();
