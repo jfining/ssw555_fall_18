@@ -118,7 +118,7 @@ public class IndividualValidator implements IValidator {
 					calendar.add(Calendar.MONTH, 9);
 					if(ind.Birthday.after(calendar.getTime())) {
 						valid = false;
-						log.error("US08", ind, fam, "Individual born 9 or more months divorce.");
+						log.error("US08", ind, fam, "Individual born 9 or more months after divorce.");
 					}
 				}
 			}
