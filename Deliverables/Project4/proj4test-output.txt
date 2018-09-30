@@ -1,0 +1,91 @@
+Error US01: IndividualId=n/a FamilyId=US01_FID1 message=Divorced Date is after current date.
+Error US01: IndividualId=n/a FamilyId=US01_FID1 message=Marriage Date is after current date.
+Error US01: IndividualId=US01_IID1 FamilyId=n/a message=Birth Date is after current date.
+Error US01: IndividualId=US01_IID1 FamilyId=n/a message=Death Date is after current date.
+Error US01: IndividualId=US05_IID1 FamilyId=n/a message=Individual does not have a birthdate.
+Error US01: IndividualId=US05_IID3 FamilyId=n/a message=Individual does not have a birthdate.
+General Validation: false
+
+Error US02: IndividualId=n/a FamilyId=US02_FID1 message=Marriage is before Husband birthday.
+Error US02: IndividualId=n/a FamilyId=US02_FID1 message=Marriage is before Wife birthday.
+Error US05: IndividualId=US05_IID1 FamilyId=US05_FID1 message=Family US05_FID1 was married after husband US05_IID1's date of death
+Error US05: IndividualId=US05_IID3 FamilyId=US05_FID1 message=Family US05_FID1 was married after wife US05_IID3's date of death
+Error US06: IndividualId=US06_IID1 FamilyId=US06_FID2 message=Individual divorced after death.
+Error US04: IndividualId=n/a FamilyId=US04_FID1 message=Divorce Date is before marriage date.
+Family Validation: false
+
+Error US03: IndividualId=US03_IID1 FamilyId=n/a message=Death date is before birthday
+Error US07: IndividualId=US07_IID1 FamilyId=n/a message=Individual US07_IID1 is living and over 150 years old
+Error US07: IndividualId=US07_IID1 FamilyId=n/a message=Individual US07_IID1 is dead and over 150 years old
+Error US08: IndividualId=US08_IID1 FamilyId=US08_FID1 message=Individual born before marriage.
+Error US08: IndividualId=US08_IID3 FamilyId=US08_FID1 message=Individual born 9 or more months after divorce.
+Individual Validation: false
+
+┌────────┬────────┬────────┬────────┬────────┬────────┬────────┬───────┬───────┐
+│ID      │Name    │Gender  │Birthday│Age     │Alive   │Death   │Child  │Spouse │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US01_IID│John    │M       │2195-02-│60      │true    │2255-02-│N/A    │US01_FI│
+│1       │/Smith/ │        │13      │        │        │13      │       │D1;    │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US02_IID│John    │M       │1987-02-│31      │false   │N/A     │N/A    │US02_FI│
+│1       │/Smith/ │        │13      │        │        │        │       │D1;    │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US02_IID│Jane    │F       │1988-02-│30      │false   │N/A     │N/A    │US02_FI│
+│3       │/Smith/ │        │13      │        │        │        │       │D1;    │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US03_IID│John    │M       │1975-02-│-5      │true    │1970-02-│N/A    │N/A    │
+│1       │/Smith/ │        │13      │        │        │13      │       │       │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US05_IID│John    │M       │N/A     │N/A     │true    │1983-02-│N/A    │US05_FI│
+│1       │/Smith/ │        │        │        │        │12      │       │D1;    │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US05_IID│Jane    │F       │N/A     │N/A     │true    │1983-02-│N/A    │US05_FI│
+│3       │/Smith/ │        │        │        │        │13      │       │D1;    │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US06_IID│Dick    │M       │1981-02-│33      │true    │2014-02-│N/A    │US06_FI│
+│1       │/Smith/ │        │13      │        │        │14      │       │D1;US06│
+│        │        │        │        │        │        │        │       │_FID2; │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US07_IID│John    │M       │1860-02-│158     │false   │N/A     │N/A    │N/A    │
+│1       │/Smith/ │        │13      │        │        │        │       │       │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US07_IID│Jake    │M       │1760-02-│160     │true    │1920-02-│N/A    │N/A    │
+│1       │/Smith/ │        │13      │        │        │13      │       │       │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US08_IID│John    │M       │1982-01-│36      │false   │N/A     │US08_FI│N/A    │
+│1       │/Smith/ │        │10      │        │        │        │D1;    │       │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US08_IID│Sam     │M       │1983-10-│34      │false   │N/A     │US08_FI│N/A    │
+│2       │/Smith/ │        │10      │        │        │        │D1;    │       │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US08_IID│Wyn     │M       │1984-10-│33      │false   │N/A     │US08_FI│N/A    │
+│3       │/Smith/ │        │20      │        │        │        │D1;    │       │
+└────────┴────────┴────────┴────────┴────────┴────────┴────────┴───────┴───────┘
+┌─────────┬─────────┬─────────┬─────────┬─────────┬─────────┬─────────┬────────┐
+│ID       │Married  │Divorced │Husband  │Husband  │Wife ID  │Wife Name│Children│
+│         │         │         │ID       │Name     │         │         │        │
+├─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼────────┤
+│US01_FID1│2215-02-1│2250-02-1│US01_IID1│John     │US01_IID3│         │N/A     │
+│         │4        │4        │         │/Smith/  │         │         │        │
+├─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼────────┤
+│US02_FID1│1985-02-1│N/A      │US02_IID1│John     │US02_IID3│Jane     │N/A     │
+│         │4        │         │         │/Smith/  │         │/Smith/  │        │
+├─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼────────┤
+│US04_FID1│1975-02-1│1970-02-1│US04_IID1│         │US04_IID3│         │N/A     │
+│         │4        │4        │         │         │         │         │        │
+├─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼────────┤
+│US05_FID1│1985-02-1│N/A      │US05_IID1│John     │US05_IID3│Jane     │N/A     │
+│         │4        │         │         │/Smith/  │         │/Smith/  │        │
+├─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼────────┤
+│US06_FID1│2001-02-1│2004-02-1│US06_IID1│Dick     │US06_IID2│         │N/A     │
+│         │4        │4        │         │/Smith/  │         │         │        │
+├─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼────────┤
+│US06_FID2│2008-02-1│2016-02-1│US06_IID1│Dick     │US06_IID3│         │N/A     │
+│         │4        │4        │         │/Smith/  │         │         │        │
+├─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼────────┤
+│US08_FID1│1982-01-1│1983-01-1│US08_IID6│         │US08_IID7│         │US08_IID│
+│         │5        │5        │         │         │         │         │1;US08_I│
+│         │         │         │         │         │         │         │ID2;US08│
+│         │         │         │         │         │         │         │_IID3;  │
+└─────────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────────┴────────┘
+
