@@ -75,6 +75,40 @@ public class FamilyValidatorTest {
         verifyNoMoreInteractions(logger);
         Assert.assertTrue(result);
     }
+    @Test //US04
+    public void noDivorceBeforeMarriageTestShouldProduceError() throws ParseException {
+        //arrange
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        Family fam = new Family();
+        fam.Id = "US04_FID1";
+        fam.Divorced = sdf.parse("02/14/2014");
+        fam.Married = sdf.parse("03/17/2015");
+        List<Family> famList = new ArrayList<Family>();
+        famList.add(fam);
+        GedLogger logger = mock(GedLogger.class);
+        FamilyValidator validator = new FamilyValidator(famList, null, logger);
+        //act
+        boolean result = validator.noDivorceBeforeMarriage();
+        //assert
+        verify(logger, Mockito.times(1)).error("US04", null, fam, "Divorce Date is before marriage date.");
+        verifyNoMoreInteractions(logger);
+        Assert.assertFalse(result);
+    }
+    @Test //US04
+    public void noDivorceBeforeMarriageTestShouldBeSuccess() throws ParseException {
+        //arrange
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        Family fam = new Family();
+        fam.Id = "US04_FID1";
+        fam.Divorced = sdf.parse("02/14/2014");
+        fam.Married = sdf.parse("03/17/2012");
+        List<Family> famList = new ArrayList<Family>();
+        famList.add(fam);
+        GedLogger logger = mock(GedLogger.class);
+        FamilyValidator validator = new FamilyValidator(famList, null, logger);
+        //act
+        boolean result = validator.noDivorceBeforeMarriage();
+    }
 
     @Test
     public void bornBeforeOrAfterMarriageShouldProduceError() throws ParseException {
@@ -140,5 +174,4 @@ public class FamilyValidatorTest {
         verifyNoMoreInteractions(logger);
         Assert.assertTrue(result);
     }
-
 }
