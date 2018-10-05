@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.rasodu.gedcom.Infrastructure.GedcomRepository;
 import com.rasodu.gedcom.Utils.GedLogger;
 import com.rasodu.gedcom.core.Family;
+import com.rasodu.gedcom.core.IGedcomRepository;
 import com.rasodu.gedcom.core.Individual;
 
 public class FamilyValidator implements IValidator {
@@ -17,12 +19,14 @@ public class FamilyValidator implements IValidator {
 
 	List<Family> familyList;
 	List<Individual> individualList;
+	IGedcomRepository repository;
 	
 	public FamilyValidator(List<Family> familyList, List<Individual> individualList, GedLogger log) {
 		super();
 		this.familyList = familyList;
 		this.individualList = individualList;
 		this.log = log;
+		repository = new GedcomRepository(individualList, familyList);
 	}
 
 	public List<Family> getFamilyList() {
