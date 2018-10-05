@@ -10,6 +10,6 @@ public class Individual {
     public char Gender = 'N';
     public Date Birthday = null;
     public Date Death = null;
-    public List<String> ChildOfFamily = new ArrayList<String>();
+    public String ChildOfFamily = null;
     public List<String> SpouseInFamily = new ArrayList<String>();
 }

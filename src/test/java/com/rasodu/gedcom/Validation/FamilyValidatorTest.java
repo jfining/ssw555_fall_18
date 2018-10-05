@@ -117,13 +117,11 @@ public class FamilyValidatorTest {
         Individual ind1 = new Individual();
         ind1.Id = "US08_IID1";
         ind1.Birthday = sdf.parse("01/10/1981");
-        ind1.ChildOfFamily = new ArrayList<String>();
-        ind1.ChildOfFamily.add("US08_FID1");
+        ind1.ChildOfFamily = "US08_FID1";
         Individual ind2 = new Individual();
         ind2.Id = "US08_IID2";
         ind2.Birthday = sdf.parse("01/10/1982");
-        ind2.ChildOfFamily = new ArrayList<String>();
-        ind2.ChildOfFamily.add("US08_FID1");
+        ind2.ChildOfFamily = "US08_FID1";
         List<Individual> indList = new ArrayList<Individual>();
         indList.add(ind1);
         indList.add(ind2);
@@ -154,8 +152,7 @@ public class FamilyValidatorTest {
         Individual ind = new Individual();
         ind.Id = "US08_IID1";
         ind.Birthday = sdf.parse("09/20/1981");
-        ind.ChildOfFamily = new ArrayList<String>();
-        ind.ChildOfFamily.add("US08_FID1");
+        ind.ChildOfFamily = "US08_FID1";
         List<Individual> indList = new ArrayList<Individual>();
         indList.add(ind);
         Family fam = new Family();
