@@ -117,28 +117,15 @@ public class FamilyValidator implements IValidator {
 
 	//US06
 	public boolean noDivorceAfterDeath() {
-		//index family by id
-		Map<String, Family> findFamily = new HashMap<String, Family>();
-		for(Family fam : familyList) {
-			findFamily.put(fam.Id, fam);
-		}
-		//find family with anomaly
 		boolean valid = true;
-		for(Individual ind : individualList) {
+		for(Individual ind : repository.GetAllIndividuals()) {
 			if(ind.Death == null) {
 				continue;
 			}
 			for(String famId : ind.SpouseInFamily) {
-				if(!findFamily.containsKey(famId)) {
-					continue;
-				}
-				Family fam = findFamily.get(famId);
-				if(fam.Divorced == null) {
-					continue;
-				}
-				if(fam.Divorced.compareTo(ind.Death) > 0){
+				if(repository.ContainsFamily(famId) && repository.GetFamily(famId).Divorced != null && repository.GetFamily(famId).Divorced.compareTo(ind.Death) > 0){
 					valid = false;
-					log.error("US06", ind, fam, "Individual divorced after death.");
+					log.error("US06", ind, repository.GetFamily(famId), "Individual divorced after death.");
 				}
 			}
 		}
