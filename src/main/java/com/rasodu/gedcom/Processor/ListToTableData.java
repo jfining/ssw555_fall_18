@@ -58,14 +58,10 @@ public class ListToTableData {
                 row.add(String.valueOf(false));
                 row.add("N/A");
             }
-            if (indivisual.ChildOfFamily.isEmpty()) {
+            if (indivisual.ChildOfFamily == null) {
                 row.add("N/A");
             } else {
-                String childOf = "";
-                for (String family : indivisual.ChildOfFamily) {
-                    childOf += family + ";";
-                }
-                row.add(childOf);
+                row.add(indivisual.ChildOfFamily + ";");
             }
             if (indivisual.SpouseInFamily.isEmpty()) {
                 row.add("N/A");

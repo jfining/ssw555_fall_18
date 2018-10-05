@@ -103,11 +103,11 @@ public class IndividualValidator implements IValidator {
 			if(ind.Birthday == null) {
 				continue;
 			}
-			for(String famId : ind.ChildOfFamily) {
-				if(!findFamily.containsKey(famId)) {
+			if(ind.ChildOfFamily != null) {
+				if(!findFamily.containsKey(ind.ChildOfFamily)) {
 					continue;
 				}
-				Family fam = findFamily.get(famId);
+				Family fam = findFamily.get(ind.ChildOfFamily);
 				//logic to check error
 				if(fam.Married != null && ind.Birthday.before(fam.Married)) {
 					valid = false;

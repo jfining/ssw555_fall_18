@@ -118,7 +118,7 @@ class TreeNodeToItem {
                         individual.Death = GetDateFromChildNode(childNode);
                         break;
                     case "FAMC":
-                        individual.ChildOfFamily.add(childNode.GetArguments());
+                        individual.ChildOfFamily = childNode.GetArguments();
                         break;
                     case "FAMS":
                         individual.SpouseInFamily.add(childNode.GetArguments());
