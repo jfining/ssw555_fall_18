@@ -3,8 +3,10 @@ package com.rasodu.gedcom.Validation;
 import java.util.Date;
 import java.util.List;
 
+import com.rasodu.gedcom.Infrastructure.GedcomRepository;
 import com.rasodu.gedcom.Utils.GedLogger;
 import com.rasodu.gedcom.core.Family;
+import com.rasodu.gedcom.core.IGedcomRepository;
 import com.rasodu.gedcom.core.Individual;
 
 public class GeneralValidator implements IValidator {
@@ -13,12 +15,14 @@ public class GeneralValidator implements IValidator {
 	
 	List<Family> familyList;
 	List<Individual> individualList;
-	
+	IGedcomRepository repository;
+
 	public GeneralValidator(List<Family> familyList, List<Individual> individualList, GedLogger log) {
 		super();
 		this.familyList = familyList;
 		this.individualList = individualList;
 		this.log = log;
+		repository = new GedcomRepository(individualList, familyList);
 	}
 	public List<Family> getFamilyList() {
 		return familyList;

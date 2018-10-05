@@ -6,8 +6,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import com.rasodu.gedcom.Infrastructure.GedcomRepository;
 import com.rasodu.gedcom.Utils.GedLogger;
 import com.rasodu.gedcom.core.Family;
+import com.rasodu.gedcom.core.IGedcomRepository;
 import com.rasodu.gedcom.core.Individual;
 
 public class IndividualValidator implements IValidator {
@@ -16,12 +18,14 @@ public class IndividualValidator implements IValidator {
 
 	List<Family> familyList;
 	List<Individual> individualList;
+	IGedcomRepository repository;
 
 	public IndividualValidator(List<Family> familyList, List<Individual> individualList, GedLogger log) {
 		super();
 		this.familyList = familyList;
 		this.individualList = individualList;
 		this.log = log;
+		repository = new GedcomRepository(individualList, familyList);
 	}
 
 	public List<Family> getFamilyList() {
@@ -92,34 +96,23 @@ public class IndividualValidator implements IValidator {
 	//US08
 	public boolean bornBeforeOrAfterMarriage() {
 		Calendar calendar = Calendar.getInstance();
-		//index family by id
-		Map<String, Family> findFamily = new HashMap<String, Family>();
-		for(Family fam : familyList) {
-			findFamily.put(fam.Id, fam);
-		}
 		//find family with anomaly
 		boolean valid = true;
 		for(Individual ind : individualList) {
-			if(ind.Birthday == null) {
+			if(ind.Birthday == null || ind.ChildOfFamily == null || !repository.ContainsFamily(ind.ChildOfFamily) ) {
 				continue;
 			}
-			if(ind.ChildOfFamily != null) {
-				if(!findFamily.containsKey(ind.ChildOfFamily)) {
-					continue;
-				}
-				Family fam = findFamily.get(ind.ChildOfFamily);
-				//logic to check error
-				if(fam.Married != null && ind.Birthday.before(fam.Married)) {
+			//logic to check error
+			if(repository.GetFamily(ind.ChildOfFamily).Married != null && ind.Birthday.before(repository.GetFamily(ind.ChildOfFamily).Married)) {
+				valid = false;
+				log.error("US08", ind, repository.GetFamily(ind.ChildOfFamily), "Individual born before marriage.");
+			}
+			else if(repository.GetFamily(ind.ChildOfFamily).Divorced != null) {
+				calendar.setTime(repository.GetFamily(ind.ChildOfFamily).Divorced);
+				calendar.add(Calendar.MONTH, 9);
+				if(ind.Birthday.after(calendar.getTime())) {
 					valid = false;
-					log.error("US08", ind, fam, "Individual born before marriage.");
-				}
-				else if(fam.Divorced != null) {
-					calendar.setTime(fam.Divorced);
-					calendar.add(Calendar.MONTH, 9);
-					if(ind.Birthday.after(calendar.getTime())) {
-						valid = false;
-						log.error("US08", ind, fam, "Individual born 9 or more months after divorce.");
-					}
+					log.error("US08", ind, repository.GetFamily(ind.ChildOfFamily), "Individual born 9 or more months after divorce.");
 				}
 			}
 		}
