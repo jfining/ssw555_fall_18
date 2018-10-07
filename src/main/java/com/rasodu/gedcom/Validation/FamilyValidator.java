@@ -11,6 +11,7 @@ import com.rasodu.gedcom.Utils.GedLogger;
 import com.rasodu.gedcom.core.Family;
 import com.rasodu.gedcom.core.IGedcomRepository;
 import com.rasodu.gedcom.core.Individual;
+import com.rasodu.gedcom.core.Spouse;
 
 public class FamilyValidator implements IValidator {
 
@@ -26,7 +27,7 @@ public class FamilyValidator implements IValidator {
 		this.familyList = familyList;
 		this.individualList = individualList;
 		this.log = log;
-		repository = new GedcomRepository(individualList, familyList);
+		updateRepository();
 	}
 
 	public List<Family> getFamilyList() {
@@ -35,6 +36,7 @@ public class FamilyValidator implements IValidator {
 
 	public void setFamilyList(List<Family> familyList) {
 		this.familyList = familyList;
+		updateRepository();
 	}
 
 	public List<Individual> getIndividualList() {
@@ -43,72 +45,46 @@ public class FamilyValidator implements IValidator {
 
 	public void setIndividualList(List<Individual> individualList) {
 		this.individualList = individualList;
-	}
-
-	// US02
-	public boolean birthBeforeMarriage() {
-		String userStory = "US02";
-		boolean valid = true;
-
-		for (Family fam : familyList) {
-			for (Individual ind : individualList) {
-				if (fam.Married != null && ind.Birthday != null) {
-					if (fam.HusbandId.equals(ind.Id)) {
-						if (fam.Married.before(ind.Birthday)) {
-							log.error(userStory, null, fam, "Marriage is before Husband birthday.");
-							valid = false;
-						}
-					}
-					if (fam.WifeId.equals(ind.Id)) {
-						if (fam.Married.before(ind.Birthday)) {
-							log.error(userStory, null, fam, "Marriage is before Wife birthday.");
-							valid = false;
-						}
-					}
-				}
-			}
-		}
-
-		return valid;
-
+		updateRepository();
 	}
 	
-	//US04
-	public boolean noDivorceBeforeMarriage() {
-		String userStory = "US04";
+	private void updateRepository() {
+		repository = new GedcomRepository(individualList, familyList);
+	}
+	
+	public boolean validateMarriageDate() {
 		boolean valid = true;
-		
-		for (Family fam : familyList) {
-			if (fam.Divorced != null) {
-				if( fam.Married.after(fam.Divorced)) {
-					log.error(userStory, null, fam, "Divorce Date is before marriage date.");
+		for(Family fam : familyList) {
+			if(fam.Married != null) {
+				Individual husband = repository.GetParentOfFamily(fam, Spouse.Husband);
+				Individual wife = repository.GetParentOfFamily(fam, Spouse.Wife);
+				
+				//US02: Parent birthdays must be before marriage date
+				if(!husband.Birthday.before(fam.Married)) {
+					log.error("US02", husband, fam, "Marriage is before Husband birthday.");
 					valid = false;
 				}
-			}
-		}
-		return valid;
-	}
-	
-	//US05
-	public boolean MarriageBeforeDeath() {
-		String userStory = "US05";
-		boolean valid = true;
-		
-		for(Family fam : familyList) {
-			for(Individual ind : individualList) {
-				if(fam.Married != null && ind.Death != null) {
-					if(ind.Id.equals(fam.HusbandId)) {
-						if(fam.Married.after(ind.Death)) {
-							log.error(userStory, ind, fam, "Family " + fam.Id + " was married after husband " + fam.HusbandId + "'s date of death");
-							valid = false;
-						}
+				if(!wife.Birthday.before(fam.Married)) {
+					log.error("US02", null, fam, "Marriage is before Wife birthday.");
+					valid = false;
+				}
+				
+				//US04: Divorce must be after marriage
+				if(fam.Divorced != null) {
+					if(!fam.Divorced.after(fam.Married)) {
+						log.error("US04", null, fam, "Divorce Date is before marriage date.");
+						valid = false;
 					}
-					else if(ind.Id.equals(fam.WifeId)) {
-						if(fam.Married.after(ind.Death)) {
-							log.error(userStory, ind, fam, "Family " + fam.Id + " was married after wife " + fam.WifeId + "'s date of death");
-							valid = false;
-						}
-					}
+				}
+				
+				//US05: Marriage must be before parent deaths
+				if(husband.Death != null && fam.Married.after(husband.Death)) {
+					log.error("US05", husband, fam, "Family was married after husband's date of death");
+					valid = false;
+				}
+				if(wife.Death != null && fam.Married.after(wife.Death)) {
+					log.error("US05", wife, fam, "Family was married after wife's date of death");
+					valid = false;
 				}
 			}
 		}
@@ -118,14 +94,18 @@ public class FamilyValidator implements IValidator {
 	//US06
 	public boolean noDivorceAfterDeath() {
 		boolean valid = true;
-		for(Individual ind : repository.GetAllIndividuals()) {
-			if(ind.Death == null) {
-				continue;
-			}
-			for(String famId : ind.SpouseInFamily) {
-				if(repository.ContainsFamily(famId) && repository.GetFamily(famId).Divorced != null && repository.GetFamily(famId).Divorced.compareTo(ind.Death) > 0){
+		for(Family fam : familyList) {
+			if(fam.Divorced != null) {
+				Individual husband = repository.GetParentOfFamily(fam, Spouse.Husband);
+				Individual wife = repository.GetParentOfFamily(fam, Spouse.Wife);
+				
+				if(husband.Death != null && fam.Divorced.after(husband.Death)) {
+					log.error("US06", husband, fam, "Individual divorced after death.");
 					valid = false;
-					log.error("US06", ind, repository.GetFamily(famId), "Individual divorced after death.");
+				}
+				if(wife.Death != null && fam.Divorced.after(wife.Death)) {
+					log.error("US06", wife, fam, "Individual divorced after death.");
+					valid = false;
 				}
 			}
 		}
@@ -136,16 +116,10 @@ public class FamilyValidator implements IValidator {
 	public boolean validate() {
 		boolean allTestsValid = true;
 
-		if (!birthBeforeMarriage()) {
-			allTestsValid = false;
-		}
-		if (!MarriageBeforeDeath()) {
+		if (!validateMarriageDate()) {
 			allTestsValid = false;
 		}
 		if (!noDivorceAfterDeath()) {
-			allTestsValid = false;
-		}
-		if (!noDivorceBeforeMarriage()) {
 			allTestsValid = false;
 		}
 

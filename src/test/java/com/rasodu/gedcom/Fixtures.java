@@ -3,6 +3,7 @@ package com.rasodu.gedcom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.rasodu.gedcom.core.*;
 public class Fixtures {
@@ -12,6 +13,7 @@ public class Fixtures {
 	public static ArrayList<Family> famList;
 	
 	public static void SetupTestFixtures() {
+		dateFormat = new SimpleDateFormat("yyyyMMdd");
 		try {
 			SetupIndividualFixtures();
 			SetupFamilyFixtures();
@@ -20,86 +22,75 @@ public class Fixtures {
 		}
 	}
 	
+	private static void AddIndividual(String id, String birthday, String name,
+			char gender, String death) throws ParseException {
+		Individual indi = new Individual();
+		indi.Id = id;
+		if(!birthday.isEmpty()) {
+			indi.Birthday = dateFormat.parse(birthday);
+		}
+		indi.Name = name;
+		indi.Gender = gender;
+		if(!death.isEmpty()) {
+			indi.Death = dateFormat.parse(death);
+		}
+		indiList.add(indi);
+	}
+	
+	private static void AddFamily(String id, String married, String husbId, String wifeId,
+			String divorced, String[] childIds) throws ParseException{
+		Family fam = new Family();
+		fam.Id = id;
+		if(!married.isEmpty()) {
+			fam.Married = dateFormat.parse(married);
+		}
+		fam.HusbandId = husbId;
+		fam.WifeId = wifeId;
+		if(!divorced.isEmpty()) {
+			fam.Divorced = dateFormat.parse(divorced);
+		}
+		fam.ChildrenIds = Arrays.asList(childIds);
+		famList.add(fam);
+	}
+	
 	private static void SetupIndividualFixtures() throws ParseException {
 		indiList = new ArrayList<Individual>();
-		dateFormat = new SimpleDateFormat("yyyyMMdd");
 		
-		//Individual 00
-		Individual indi00 = new Individual();
-		indi00.Id = "indi00";
-		indi00.Birthday = dateFormat.parse("19600101");
-		indi00.Name = "Mister /Max/";
-		indi00.Gender = 'M';
-		indiList.add(indi00);
+		AddIndividual("indi00", "19600101", "Mister /Max", 'M', "");
+		AddIndividual("indi01", "19650312", "SecondWife /Max", 'F', "");
+		AddIndividual("indi02", "19580731", "DeadWife /Max", 'F', "19850101");
+		AddIndividual("indi03", "19720804", "Dead /Husband", 'M', "19881230");
 		
-		//Individual 01
-		Individual indi01 = new Individual();
-		indi01.Id = "indi01";
-		indi01.Birthday = dateFormat.parse("19650312");
-		indi01.Name = "SecondWife /Max/";
-		indi01.Gender = 'F';
-		indiList.add(indi01);
-		
-		//Individual 02
-		Individual indi02 = new Individual();
-		indi02.Id = "indi02";
-		indi02.Birthday = dateFormat.parse("19580731");
-		indi02.Name = "DeadWife /Max/";
-		indi02.Gender = 'F';
-		indi02.Death = dateFormat.parse("19850101");
-		indiList.add(indi02);
-		
-		//Individual 03
-		Individual indi03 = new Individual();
-		indi03.Id = "indi03";
-		indi03.Birthday = dateFormat.parse("19720804");
-		indi03.Name = "Dead /Husband/";
-		indi03.Gender = 'M';
-		indi03.Death = dateFormat.parse("19881230");
-		indiList.add(indi03);
 	}
 	
 	private static void SetupFamilyFixtures() throws ParseException {
 		famList = new ArrayList<Family>();
 		
 		//Family 00: Tests US05 husband and wife alive
-		Family fam00 = new Family();
-		fam00.Id = "fam00";
-		fam00.Married = dateFormat.parse("19920229");
-		fam00.HusbandId = "indi00";
-		fam00.WifeId = "indi01";
-		famList.add(fam00);
+		AddFamily("fam00", "19920229", "indi00", "indi01", "", new String[0]);
 		
 		//Family 01: Tests US05 wife early death, husband alive
-		Family fam01 = new Family();
-		fam01.Id = "fam01";
-		fam01.Married = dateFormat.parse("19900101");
-		fam01.HusbandId = "indi00";
-		fam01.WifeId = "indi02";
-		famList.add(fam01);
+		AddFamily("fam01", "19900101", "indi00", "indi02", "", new String[0]);
 		
 		//Family 02: Tests US05 husband early death, wife alive
-		Family fam02 = new Family();
-		fam02.Id = "fam02";
-		fam02.Married = dateFormat.parse("19890101");
-		fam02.HusbandId = "indi03";
-		fam02.WifeId = "indi01";
-		famList.add(fam02);
+		AddFamily("fam02", "19890101", "indi03", "indi01", "", new String[0]);
 		
 		//Family 03: Tests US05 wife and husband early death
-		Family fam03 = new Family();
-		fam03.Id = "fam03";
-		fam03.Married = dateFormat.parse("20000101");
-		fam03.HusbandId = "indi02";
-		fam03.WifeId = "indi03";
-		famList.add(fam03);
+		AddFamily("fam03", "20000101", "indi02", "indi03", "", new String[0]);
 		
 		//Family 04: Tests US05 husband alive, wife death after marriage
-		Family fam04 = new Family();
-		fam04.Id = "fam04";
-		fam04.Married = dateFormat.parse("19830515");
-		fam04.HusbandId = "indi00";
-		fam04.WifeId = "indi02";
-		famList.add(fam04);
+		AddFamily("fam04", "19830515", "indi00", "indi02", "", new String[0]);
+		
+		//Family 05: Tests US01 divorce before death
+		AddFamily("fam05", "19700101", "indi03", "indi01", "19860101", new String[0]);
+		
+		//Family 06: Tests US01 divorce after death
+		AddFamily("fam06", "19700101", "indi03", "indi01", "20160214", new String[0]);
+		
+		//Family 07: Tests US04 divorce before marriage
+		AddFamily("fam07", "19800101", "indi00", "indi01", "19790101", new String[0]);
+		
+		//Family 08: Tests US04 divorce after marriage
+		AddFamily("fam08", "19790101", "indi00", "indi01", "19800101", new String[0]);
 	}
 }
