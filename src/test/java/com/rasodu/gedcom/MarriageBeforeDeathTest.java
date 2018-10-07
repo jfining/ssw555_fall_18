@@ -15,16 +15,17 @@ import com.rasodu.gedcom.Validation.*;
 public class MarriageBeforeDeathTest{
 
 	private GedLogger logger = new GedLogger();
+	private FamilyValidator vali;
 	
 	@Before
 	public void setup() {
 		Fixtures.SetupTestFixtures();
+		vali = new FamilyValidator(null, null, logger);
 	}
 	
 	@Test
 	public void testCase00() {
 		Fixtures.SetupTestFixtures();
-		FamilyValidator vali = new FamilyValidator(null, null, logger);
 		List<Family> fams = new ArrayList<Family>();
 		List<Individual> indis = new ArrayList<Individual>();
 		fams.add(Fixtures.famList.get(0));
@@ -32,12 +33,11 @@ public class MarriageBeforeDeathTest{
 		indis.add(Fixtures.indiList.get(1));
 		vali.setIndividualList(indis);
 		vali.setFamilyList(fams);
-		assertTrue(vali.MarriageBeforeDeath());
+		assertTrue(vali.validateMarriageDate());
 	}
 	
 	@Test
 	public void testCase01() {
-		FamilyValidator vali = new FamilyValidator(null, null, logger);
 		List<Family> fams = new ArrayList<Family>();
 		List<Individual> indis = new ArrayList<Individual>();
 		fams.add(Fixtures.famList.get(1));
@@ -45,12 +45,11 @@ public class MarriageBeforeDeathTest{
 		indis.add(Fixtures.indiList.get(2));
 		vali.setIndividualList(indis);
 		vali.setFamilyList(fams);
-		assertFalse(vali.MarriageBeforeDeath());
+		assertFalse(vali.validateMarriageDate());
 	}
 	
 	@Test
 	public void testCase02() {
-		FamilyValidator vali = new FamilyValidator(null, null, logger);
 		List<Family> fams = new ArrayList<Family>();
 		List<Individual> indis = new ArrayList<Individual>();
 		fams.add(Fixtures.famList.get(2));
@@ -58,12 +57,11 @@ public class MarriageBeforeDeathTest{
 		indis.add(Fixtures.indiList.get(3));
 		vali.setIndividualList(indis);
 		vali.setFamilyList(fams);
-		assertFalse(vali.MarriageBeforeDeath());
+		assertFalse(vali.validateMarriageDate());
 	}
 	
 	@Test
 	public void testCase03() {
-		FamilyValidator vali = new FamilyValidator(null, null, logger);
 		List<Family> fams = new ArrayList<Family>();
 		List<Individual> indis = new ArrayList<Individual>();
 		fams.add(Fixtures.famList.get(3));
@@ -71,12 +69,11 @@ public class MarriageBeforeDeathTest{
 		indis.add(Fixtures.indiList.get(3));
 		vali.setIndividualList(indis);
 		vali.setFamilyList(fams);
-		assertFalse(vali.MarriageBeforeDeath());
+		assertFalse(vali.validateMarriageDate());
 	}
 	
 	@Test
 	public void testCase04() {
-		FamilyValidator vali = new FamilyValidator(null, null, logger);
 		List<Family> fams = new ArrayList<Family>();
 		List<Individual> indis = new ArrayList<Individual>();
 		fams.add(Fixtures.famList.get(4));
@@ -84,7 +81,7 @@ public class MarriageBeforeDeathTest{
 		indis.add(Fixtures.indiList.get(2));
 		vali.setIndividualList(indis);
 		vali.setFamilyList(fams);
-		assertTrue(vali.MarriageBeforeDeath());
+		assertTrue(vali.validateMarriageDate());
 	}
 
 }

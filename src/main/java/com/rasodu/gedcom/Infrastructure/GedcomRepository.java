@@ -4,6 +4,7 @@ import com.rasodu.gedcom.core.*;
 
 import java.util.*;
 
+
 public class GedcomRepository implements IGedcomRepository {
     private List<Individual> individuals;
     private List<Family> families;
@@ -64,5 +65,28 @@ public class GedcomRepository implements IGedcomRepository {
 
     public Family GetFamily(String FamilyId){
         return familiesMap.get(FamilyId);
+    }
+    
+    public Individual GetParentOfFamily(Family family, Spouse spouse) {
+    	String parentId;
+    	if(spouse == Spouse.Husband) {
+    		parentId = family.HusbandId;
+    	} else {
+    		parentId = family.WifeId;
+    	}
+    	if(ContainsIndividual(parentId)) {
+    		return GetIndividual(parentId);
+    	}
+    	return null;
+    }
+    
+    public List<Individual> GetChildrenOfFamily(Family family) {
+    	List<Individual> children = new ArrayList<Individual>();
+    	for(String childId : family.ChildrenIds) {
+    		if(ContainsIndividual(childId)) {
+    			children.add(GetIndividual(childId));
+    		}
+    	}
+    	return children;
     }
 }

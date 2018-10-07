@@ -1,9 +1,11 @@
 package com.rasodu.gedcom.Validation;
 
+import com.rasodu.gedcom.Fixtures;
 import com.rasodu.gedcom.Utils.GedLogger;
 import com.rasodu.gedcom.core.Family;
 import com.rasodu.gedcom.core.Individual;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -15,33 +17,31 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 public class FamilyValidatorTest {
+	
+	private GedLogger logger;
+	private FamilyValidator famVali;
+	
+	@Before
+	public void setup() {
+		Fixtures.SetupTestFixtures();
+		logger = mock(GedLogger.class);
+		famVali = new FamilyValidator(null, null, logger);
+	}
+	
     @Test
-    public void noDivorceAfterDeathTestShouldProduceError() throws ParseException {
+    public void noDivorceAfterDeathTestShouldProduceError(){
         //arrange
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-        Individual ind = new Individual();
-        ind.Id = "US01_IID1";
-        ind.Death = sdf.parse("02/14/2014");
-        ind.SpouseInFamily = new ArrayList<String>();
-        ind.SpouseInFamily.add("US01_FID1");
-        ind.SpouseInFamily.add("US01_FID2");
-        List<Individual> indList = new ArrayList<Individual>();
-        indList.add(ind);
-        Family fam1 = new Family();
-        fam1.Id = "US01_FID1";
-        fam1.Divorced = sdf.parse("02/14/2004");
-        Family fam2 = new Family();
-        fam2.Id = "US01_FID2";
-        fam2.Divorced = sdf.parse("02/14/2016");
+    	List<Individual> indList = new ArrayList<Individual>();
+        indList.add(Fixtures.indiList.get(3));
+        indList.add(Fixtures.indiList.get(1));
         List<Family> famList = new ArrayList<Family>();
-        famList.add(fam1);
-        famList.add(fam2);
-        GedLogger logger = mock(GedLogger.class);
-        FamilyValidator validator = new FamilyValidator(famList, indList, logger);
+        famList.add(Fixtures.famList.get(6));
+        famVali.setFamilyList(famList);
+        famVali.setIndividualList(indList);
         //act
-        boolean result = validator.noDivorceAfterDeath();
+        boolean result = famVali.noDivorceAfterDeath();
         //assert
-        verify(logger, Mockito.times(1)).error("US06", ind, fam2, "Individual divorced after death.");
+        verify(logger, Mockito.times(1)).error("US06", indList.get(0), famList.get(0), "Individual divorced after death.");
         verifyNoMoreInteractions(logger);
         Assert.assertFalse(result);
     }
@@ -49,65 +49,50 @@ public class FamilyValidatorTest {
     @Test
     public void noDivorceAfterDeathTestShouldBeSuccess() throws ParseException {
         //arrange
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-        Individual ind = new Individual();
-        ind.Id = "US01_IID1";
-        ind.Death = sdf.parse("02/14/2014");
-        ind.SpouseInFamily = new ArrayList<String>();
-        ind.SpouseInFamily.add("US01_FID1");
-        ind.SpouseInFamily.add("US01_FID2");
-        List<Individual> indList = new ArrayList<Individual>();
-        indList.add(ind);
-        Family fam1 = new Family();
-        fam1.Id = "US01_FID1";
-        fam1.Divorced = sdf.parse("02/14/2004");
-        Family fam2 = new Family();
-        fam2.Id = "US01_FID2";
-        fam2.Divorced = sdf.parse("02/14/2012");
+    	List<Individual> indList = new ArrayList<Individual>();
+        indList.add(Fixtures.indiList.get(3));
+        indList.add(Fixtures.indiList.get(1));
         List<Family> famList = new ArrayList<Family>();
-        famList.add(fam1);
-        famList.add(fam2);
-        GedLogger logger = mock(GedLogger.class);
-        FamilyValidator validator = new FamilyValidator(famList, indList, logger);
+        famList.add(Fixtures.famList.get(5));
+        famVali.setFamilyList(famList);
+        famVali.setIndividualList(indList);
         //act
-        boolean result = validator.noDivorceAfterDeath();
+        boolean result = famVali.noDivorceAfterDeath();
         //assert
         verifyNoMoreInteractions(logger);
         Assert.assertTrue(result);
     }
+    
     @Test //US04
     public void noDivorceBeforeMarriageTestShouldProduceError() throws ParseException {
         //arrange
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-        Family fam = new Family();
-        fam.Id = "US04_FID1";
-        fam.Divorced = sdf.parse("02/14/2014");
-        fam.Married = sdf.parse("03/17/2015");
+    	List<Individual> indList = new ArrayList<Individual>();
+        indList.add(Fixtures.indiList.get(0));
+        indList.add(Fixtures.indiList.get(1));
         List<Family> famList = new ArrayList<Family>();
-        famList.add(fam);
-        GedLogger logger = mock(GedLogger.class);
-        FamilyValidator validator = new FamilyValidator(famList, null, logger);
+        famList.add(Fixtures.famList.get(7));
+        famVali.setFamilyList(famList);
+        famVali.setIndividualList(indList);
         //act
-        boolean result = validator.noDivorceBeforeMarriage();
+        boolean result = famVali.validateMarriageDate();
         //assert
-        verify(logger, Mockito.times(1)).error("US04", null, fam, "Divorce Date is before marriage date.");
+        verify(logger, Mockito.times(1)).error("US04", null, famList.get(0), "Divorce Date is before marriage date.");
         verifyNoMoreInteractions(logger);
         Assert.assertFalse(result);
     }
     @Test //US04
     public void noDivorceBeforeMarriageTestShouldBeSuccess() throws ParseException {
         //arrange
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-        Family fam = new Family();
-        fam.Id = "US04_FID1";
-        fam.Divorced = sdf.parse("02/14/2014");
-        fam.Married = sdf.parse("03/17/2012");
+    	List<Individual> indList = new ArrayList<Individual>();
+        indList.add(Fixtures.indiList.get(0));
+        indList.add(Fixtures.indiList.get(1));
         List<Family> famList = new ArrayList<Family>();
-        famList.add(fam);
-        GedLogger logger = mock(GedLogger.class);
-        FamilyValidator validator = new FamilyValidator(famList, null, logger);
+        famList.add(Fixtures.famList.get(8));
+        famVali.setFamilyList(famList);
+        famVali.setIndividualList(indList);
         //act
-        boolean result = validator.noDivorceBeforeMarriage();
+        boolean result = famVali.validateMarriageDate();
+        Assert.assertTrue(result);
     }
 
     @Test
