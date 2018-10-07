@@ -60,11 +60,11 @@ public class FamilyValidator implements IValidator {
 				Individual wife = repository.GetParentOfFamily(fam, Spouse.Wife);
 				
 				//US02: Parent birthdays must be before marriage date
-				if(!husband.Birthday.before(fam.Married)) {
+				if(husband != null && husband.Birthday != null && !husband.Birthday.before(fam.Married)) {
 					log.error("US02", husband, fam, "Marriage is before Husband birthday.");
 					valid = false;
 				}
-				if(!wife.Birthday.before(fam.Married)) {
+				if(wife != null && wife.Birthday != null && !wife.Birthday.before(fam.Married)) {
 					log.error("US02", null, fam, "Marriage is before Wife birthday.");
 					valid = false;
 				}
@@ -78,11 +78,11 @@ public class FamilyValidator implements IValidator {
 				}
 				
 				//US05: Marriage must be before parent deaths
-				if(husband.Death != null && fam.Married.after(husband.Death)) {
+				if(husband != null && husband.Death != null && fam.Married.after(husband.Death)) {
 					log.error("US05", husband, fam, "Family was married after husband's date of death");
 					valid = false;
 				}
-				if(wife.Death != null && fam.Married.after(wife.Death)) {
+				if(wife != null && wife.Death != null && fam.Married.after(wife.Death)) {
 					log.error("US05", wife, fam, "Family was married after wife's date of death");
 					valid = false;
 				}
@@ -99,11 +99,11 @@ public class FamilyValidator implements IValidator {
 				Individual husband = repository.GetParentOfFamily(fam, Spouse.Husband);
 				Individual wife = repository.GetParentOfFamily(fam, Spouse.Wife);
 				
-				if(husband.Death != null && fam.Divorced.after(husband.Death)) {
+				if(husband != null && husband.Death != null && fam.Divorced.after(husband.Death)) {
 					log.error("US06", husband, fam, "Individual divorced after death.");
 					valid = false;
 				}
-				if(wife.Death != null && fam.Divorced.after(wife.Death)) {
+				if(wife != null && wife.Death != null && fam.Divorced.after(wife.Death)) {
 					log.error("US06", wife, fam, "Individual divorced after death.");
 					valid = false;
 				}
