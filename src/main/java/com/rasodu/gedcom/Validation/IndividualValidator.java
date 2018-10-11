@@ -118,6 +118,9 @@ public class IndividualValidator implements IValidator {
 		}
 		return valid;
 	}
+	
+	
+	
 	@Override
 	public boolean validate() {
 		boolean allTestsValid = true;
