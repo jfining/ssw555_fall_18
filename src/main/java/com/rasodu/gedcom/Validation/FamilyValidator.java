@@ -183,21 +183,27 @@ public class FamilyValidator implements IValidator {
 	public boolean noMaleDifferentName() {
 		boolean valid = true;
 		for (Family fam : familyList) {
-			for (Individual ind : individualList) {
-				if (fam.Married != null && fam.ChildrenIds != null && ind.ChildOfFamily != null && ind.Gender == 'M') {
-					Individual husband = repository.GetParentOfFamily(fam, Spouse.Husband);
-
-					String[] husbNameSplit = husband.Name.split("/");
-					String[] indNamesplit = ind.Name.split("/");
-
+			if (fam.Married != null && fam.ChildrenIds != null) {
+				Individual husband = repository.GetParentOfFamily(fam, Spouse.Husband);
+				if(husband == null) {
+					continue;
+				}
+				String[] husbNameSplit = husband.Name.split("/");
+				if(husbNameSplit.length < 2) {
+					continue;
+				}
+				for(Individual child : repository.GetChildrenOfFamily(fam)) {
+					String[] indNamesplit = child.Name.split("/");
+					if(indNamesplit.length < 2) {
+						continue;
+					}
 					if (husbNameSplit[1].equals(indNamesplit[1])) {
 						valid = false;
-						log.error("US16", ind, repository.GetFamily(ind.ChildOfFamily),
+						log.error("US16", child, fam,
 								"Individual last name is different than Father'");
 					}
-
 				}
-
+				
 			}
 		}
 		return valid;
