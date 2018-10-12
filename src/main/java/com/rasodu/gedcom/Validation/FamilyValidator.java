@@ -197,7 +197,7 @@ public class FamilyValidator implements IValidator {
 					if(indNamesplit.length < 2) {
 						continue;
 					}
-					if (husbNameSplit[1].equals(indNamesplit[1])) {
+					if (!husbNameSplit[1].equals(indNamesplit[1])) {
 						valid = false;
 						log.error("US16", child, fam,
 								"Individual last name is different than Father'");
