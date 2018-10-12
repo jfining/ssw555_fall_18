@@ -87,16 +87,19 @@ public class FamilyValidator implements IValidator {
 				}
 
 				// US10 Marriage must be after 14
-				long husDiff = fam.Married.getTime() - husband.Birthday.getTime();
-				long wifeDiff = fam.Married.getTime() - wife.Birthday.getTime();
+				if ((husband != null && husband.Birthday != null) && (wife != null && wife.Birthday != null) ) {
 
-				if (husband != null && husband.Birthday != null && husDiff < 14) {
-					log.error("US10", husband, fam, "Husband married before 14");
-					valid = false;
-				}
-				if (wife != null && wife.Birthday != null && wifeDiff < 14) {
-					log.error("US10", wife, fam, "Wife married before 14");
-					valid = false;
+					long husDiff = fam.Married.getTime() - husband.Birthday.getTime();
+					long wifeDiff = fam.Married.getTime() - wife.Birthday.getTime();
+
+					if (husDiff < 14) {
+						log.error("US10", husband, fam, "Husband married before 14");
+						valid = false;
+					}
+					if (wifeDiff < 14) {
+						log.error("US10", wife, fam, "Wife married before 14");
+						valid = false;
+					}
 				}
 			}
 		}
