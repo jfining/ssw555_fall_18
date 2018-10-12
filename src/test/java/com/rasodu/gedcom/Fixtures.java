@@ -56,11 +56,23 @@ public class Fixtures {
 	private static void SetupIndividualFixtures() throws ParseException {
 		indiList = new ArrayList<Individual>();
 		
-		AddIndividual("indi00", "19600101", "Mister /Max", 'M', "");
-		AddIndividual("indi01", "19650312", "SecondWife /Max", 'F', "");
-		AddIndividual("indi02", "19580731", "DeadWife /Max", 'F', "19850101");
-		AddIndividual("indi03", "19720804", "Dead /Husband", 'M', "19881230");
+		//Generic living/dead parents
+		AddIndividual("indi00", "19600101", "Mister /Max/", 'M', "");
+		AddIndividual("indi01", "19650312", "SecondWife /Max/", 'F', "");
+		AddIndividual("indi02", "19580731", "DeadWife /Max/", 'F', "19850101");
+		AddIndividual("indi03", "19720804", "Dead /Husband/", 'M', "19881230");
 		
+		//Children to test US13: siblings born now, after 1 day, after 5 months, after 2 years
+		AddIndividual("indi04", "19900101", "ChildOne /Max/", 'M', "");
+		AddIndividual("indi05", "19900102", "Twin /Max/", 'M', "");
+		AddIndividual("indi06", "19900601", "Anomaly /NotMax/", 'M', "");
+		AddIndividual("indi07", "19920101", "LilSis /May/", 'F', "");
+		
+		//Children to test US14 along with indi04,05: sextuplets
+		AddIndividual("indi08", "19900101", "Triplet /Max/", 'M', "");
+		AddIndividual("indi09", "19900102", "Quadruplet /Max/", 'F', "");
+		AddIndividual("indi10", "19900101", "Quintuplet /Max/", 'M', "");
+		AddIndividual("indi11", "19900102", "Sextuplet /Max/", 'F', "");
 	}
 	
 	private static void SetupFamilyFixtures() throws ParseException {
@@ -92,5 +104,17 @@ public class Fixtures {
 		
 		//Family 08: Tests US04 divorce after marriage
 		AddFamily("fam08", "19790101", "indi00", "indi01", "19800101", new String[0]);
+		
+		//Family 09: Tests US13 twins and separated births
+		AddFamily("fam09", "19850101", "indi00", "indi01", "", new String[] {"indi04", "indi05", "indi07"});
+		
+		//Family 10: Tests US13 too-close-together births - 06 should be anomalous
+		AddFamily("fam10", "19850101", "indi00", "indi01", "", new String[] {"indi04", "indi05", "indi06", "indi07"});
+		
+		//Family 11: Tests US14 quintuplets
+		AddFamily("fam11", "19850101", "indi00", "indi01", "", new String[] {"indi04", "indi05", "indi08", "indi09", "indi10"});
+		
+		//Family 12: Tests US14 sextuplets - all births should be anomalous
+		AddFamily("fam12", "19850101", "indi00", "indi01", "", new String[] {"indi04", "indi05", "indi08", "indi09", "indi10", "indi11"});
 	}
 }

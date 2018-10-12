@@ -1,4 +1,4 @@
-package com.rasodu.gedcom;
+package com.rasodu.gedcom.Validation;
 
 import static org.junit.Assert.*;
 
@@ -8,18 +8,20 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import com.rasodu.gedcom.core.*;
+import com.rasodu.gedcom.Fixtures;
 import com.rasodu.gedcom.Utils.GedLogger;
-import com.rasodu.gedcom.Validation.*;
+import static org.mockito.Mockito.*;
 
 
 public class MarriageBeforeDeathTest{
 
-	private GedLogger logger = new GedLogger();
+	private GedLogger logger;
 	private FamilyValidator vali;
 	
 	@Before
 	public void setup() {
 		Fixtures.SetupTestFixtures();
+		logger = mock(GedLogger.class);
 		vali = new FamilyValidator(null, null, logger);
 	}
 	
@@ -34,6 +36,7 @@ public class MarriageBeforeDeathTest{
 		vali.setIndividualList(indis);
 		vali.setFamilyList(fams);
 		assertTrue(vali.validateMarriageDate());
+		verifyNoMoreInteractions(logger);
 	}
 	
 	@Test
@@ -82,6 +85,7 @@ public class MarriageBeforeDeathTest{
 		vali.setIndividualList(indis);
 		vali.setFamilyList(fams);
 		assertTrue(vali.validateMarriageDate());
+		verifyNoMoreInteractions(logger);
 	}
 
 }
