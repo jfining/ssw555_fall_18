@@ -2,6 +2,7 @@ package com.rasodu.gedcom.Validation;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,6 +128,57 @@ public class FamilyValidator implements IValidator {
 		return valid;
 	}
 
+	//US13, US14
+	public boolean validateChildBirthdays() {
+		boolean valid = true;
+		for(Family fam: familyList) {
+			List<Individual> children = repository.GetChildrenOfFamily(fam);
+			
+			//sort children by birthday
+			children = insertionSortByBirthday(children);
+			if(children.isEmpty()) {
+				continue;
+			}
+			
+			//if more than 5 children born at once, throw error US14
+			Calendar calendar = Calendar.getInstance();
+			List<Individual> simultaneousBirths;
+			while(children.size() > 0) {
+				simultaneousBirths = new ArrayList<Individual>();
+				calendar.setTime(children.get(0).Birthday);
+				calendar.add(Calendar.DATE, 1);
+				Date maxTwinBirthday = calendar.getTime();
+				calendar.add(Calendar.DATE, -1);
+				calendar.add(Calendar.MONTH, 9);
+				Date minSiblingBirthday = calendar.getTime();
+				String oldestChildId = children.get(0).Id;
+				Individual[] tempChildren = children.toArray(new Individual[0]);
+				//iterate over children, tracking birthdays
+				//if child is between 1 day and 9 months apart from siblings, throw error US13
+				for(Individual child : tempChildren) {
+					if(!child.Birthday.before(minSiblingBirthday)) {
+						//We don't care about kids born 9 months later right now
+						break;
+					}
+					if(child.Birthday.after(maxTwinBirthday)) {
+						log.error("US13", child, fam, "Child born between 1 day and 9 months after older sibling " + oldestChildId);
+						valid = false;
+						continue;
+					}
+					simultaneousBirths.add(child);
+					children.remove(child);
+				}
+				if(simultaneousBirths.size() > 5) {
+					valid = false;
+					for(Individual child : simultaneousBirths){
+						log.error("US14", child, fam, "Child has 5 or more siblings born at the same time");
+					}
+				}
+			}
+		}
+		return valid;
+	}
+	
 	// US16 Male last names
 	public boolean noMaleDifferentName() {
 		boolean valid = true;
@@ -150,7 +202,38 @@ public class FamilyValidator implements IValidator {
 		}
 		return valid;
 	}
-
+	
+	
+	private List<Individual> insertionSortByBirthday(List<Individual> people){
+		int count = people.size();
+		int oldestIndex = -1;
+		Date oldestBirthday;
+		boolean nonNullFound = true;
+		List<Individual> sorted = new ArrayList<Individual>();
+		while(sorted.size() < count && nonNullFound ) {
+			nonNullFound = false;
+			oldestBirthday = new Date();
+			oldestIndex = -1;
+			//Get the oldest non-null birthday and add the person to the list
+			for(int i = 0; i < people.size(); i++) {
+				Date birthday = people.get(i).Birthday;
+				if(birthday == null) {
+					continue;
+				}
+				nonNullFound = true;
+				if(birthday.before(oldestBirthday)) {
+					oldestIndex = i;
+					oldestBirthday = birthday;
+				}
+			}
+			if(nonNullFound) {
+				sorted.add(people.get(oldestIndex));
+				people.remove(oldestIndex);
+			}
+		}
+		return sorted;
+	}
+	
 	@Override
 	public boolean validate() {
 		boolean allTestsValid = true;
@@ -160,6 +243,12 @@ public class FamilyValidator implements IValidator {
 		}
 		if (!noDivorceAfterDeath()) {
 			allTestsValid = false;
+		}
+		if (!validateChildBirthdays()) {
+			allTestsValid = false;
+		}
+		if (!noMaleDifferentName()) {
+			allTestsValid= false;
 		}
 
 		return allTestsValid;
