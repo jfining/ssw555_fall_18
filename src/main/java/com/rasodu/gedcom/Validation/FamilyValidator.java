@@ -209,6 +209,50 @@ public class FamilyValidator implements IValidator {
 		return valid;
 	}
 	
+	//US11
+	public boolean noBigamy() {
+		String userStory = "US11";
+		boolean valid = true;
+		for (Individual ind : individualList) {
+			if (ind.SpouseInFamily.size() > 1) {
+				List<Family> families = new ArrayList<Family>();
+				for (String famId : ind.SpouseInFamily) {
+					families.add(repository.GetFamily(famId));
+				}
+				for (Family fam : families) {
+					for (Family fam2 : families) {
+						if (fam == fam2) {
+							continue;
+						}
+						if (fam.Divorced == null) {
+							if (fam2.Divorced == null) { 
+								log.error(userStory, ind, fam, "Individual cannot be in more than one marriage.");
+								valid = false;
+							}
+							else if (fam.Married.before(fam2.Divorced)) {
+								log.error(userStory, ind, fam, "Individual cannot be in more than one marriage.");
+								valid = false;
+							}
+						}
+						else {
+							if (fam2.Divorced == null) {
+								if (fam2.Married.before(fam.Divorced)) {
+									log.error(userStory, ind, fam, "Individual cannot be in more than one marriage.");
+									valid = false;
+								}
+							}
+							else if (fam2.Married.before(fam.Divorced) || fam.Married.before(fam2.Divorced)) {
+								log.error(userStory, ind, fam, "Individual cannot be in more than one marriage.");
+								valid = false;
+							}
+						}
+						
+					}
+				}
+			}
+		}
+		return valid;
+	}
 	
 	private List<Individual> insertionSortByBirthday(List<Individual> people){
 		int count = people.size();
@@ -255,6 +299,9 @@ public class FamilyValidator implements IValidator {
 		}
 		if (!noMaleDifferentName()) {
 			allTestsValid= false;
+		}
+		if (!noBigamy()) {
+			allTestsValid = false;
 		}
 
 		return allTestsValid;
