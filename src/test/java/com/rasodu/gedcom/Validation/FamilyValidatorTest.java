@@ -156,4 +156,111 @@ public class FamilyValidatorTest {
         verifyNoMoreInteractions(logger);
         Assert.assertTrue(result);
     }
+    
+    //US11
+    @Test
+    public void noBigamyShouldProduceError() throws ParseException {
+    	//arrange
+    	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        List<Individual> indList = new ArrayList<Individual>();
+        List<Family> famList = new ArrayList<Family>();
+        
+        Individual ind = new Individual();
+        ind.Id = "US11_IID1";
+        ind.Birthday = sdf.parse("02/14/1980");
+        ind.Death = null;
+        
+        Individual ind2 = new Individual();
+        ind2.Id = "US11_IID2";
+        ind2.Birthday = sdf.parse("03/20/1985");
+        ind2.Death = null;
+        
+        Family fam = new Family();
+        fam.Id = "US11_FID1";
+        fam.Divorced = null;
+        fam.Married = sdf.parse("06/04/2000");
+        fam.HusbandId = ind.Id;
+        fam.WifeId = ind2.Id;
+        
+        Family fam2 = new Family();
+        fam2.Id = "US11_FID2";
+        fam2.Divorced = null;
+        fam2.Married = sdf.parse("03/17/2005");
+        fam2.HusbandId = ind.Id;
+        fam2.WifeId = ind2.Id;
+        
+        ind.SpouseInFamily.add(fam.Id);
+        ind.SpouseInFamily.add(fam2.Id);
+        ind2.SpouseInFamily.add(fam.Id);
+        ind2.SpouseInFamily.add(fam2.Id);
+        
+        indList.add(ind);
+        indList.add(ind2);
+        famList.add(fam);
+        famList.add(fam2);
+        
+        GedLogger logger = mock(GedLogger.class);
+        FamilyValidator validator = new FamilyValidator(famList, indList, logger);
+        //act
+        boolean result = validator.noBigamy();
+        //assert
+        verify(logger, Mockito.times(1)).error("US11", ind, fam, "Individual cannot be in more than one marriage.");
+        verify(logger, Mockito.times(1)).error("US11", ind2, fam, "Individual cannot be in more than one marriage.");
+        verify(logger, Mockito.times(1)).error("US11", ind, fam2, "Individual cannot be in more than one marriage.");
+        verify(logger, Mockito.times(1)).error("US11", ind2, fam2, "Individual cannot be in more than one marriage.");
+        //assert
+        verifyNoMoreInteractions(logger);
+        Assert.assertFalse(result);
+    }
+    
+    //US11
+    @Test
+    public void noBigamyShouldBeSuccess() throws ParseException {
+    	//arrange
+    	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        List<Individual> indList = new ArrayList<Individual>();
+        List<Family> famList = new ArrayList<Family>();
+        
+        Individual ind = new Individual();
+        ind.Id = "US11_IID1";
+        ind.Birthday = sdf.parse("02/14/1980");
+        ind.Death = null;
+        
+        Individual ind2 = new Individual();
+        ind2.Id = "US11_IID2";
+        ind2.Birthday = sdf.parse("03/20/1985");
+        ind2.Death = null;
+        
+        Family fam = new Family();
+        fam.Id = "US11_FID1";
+        fam.Divorced = sdf.parse("03/10/2004");
+        fam.Married = sdf.parse("06/04/2000");
+        fam.HusbandId = ind.Id;
+        fam.WifeId = ind2.Id;
+        
+        Family fam2 = new Family();
+        fam2.Id = "US11_FID2";
+        fam2.Divorced = null;
+        fam2.Married = sdf.parse("03/17/2005");
+        fam2.HusbandId = ind.Id;
+        fam2.WifeId = ind2.Id;
+        
+        ind.SpouseInFamily.add(fam.Id);
+        ind.SpouseInFamily.add(fam2.Id);
+        ind2.SpouseInFamily.add(fam.Id);
+        ind2.SpouseInFamily.add(fam2.Id);
+        
+        indList.add(ind);
+        indList.add(ind2);
+        famList.add(fam);
+        famList.add(fam2);
+        
+        GedLogger logger = mock(GedLogger.class);
+        FamilyValidator validator = new FamilyValidator(famList, indList, logger);
+        //act
+        boolean result = validator.noBigamy();
+        //assert
+        verifyNoMoreInteractions(logger);
+        Assert.assertTrue(result);
+    }
 }
