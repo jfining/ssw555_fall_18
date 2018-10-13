@@ -51,12 +51,12 @@ public class ListToTableData {
                 LocalDate death = indivisual.Death.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 row.add(String.valueOf(Period.between(birthday, death).getYears()));
             }
-            if (indivisual.Death != null) {
+            if (indivisual.Death == null) {
                 row.add(String.valueOf(true));
-                row.add(df.format(indivisual.Death));
+                row.add("N/A");
             } else {
                 row.add(String.valueOf(false));
-                row.add("N/A");
+                row.add(df.format(indivisual.Death));
             }
             if (indivisual.ChildOfFamily == null) {
                 row.add("N/A");
