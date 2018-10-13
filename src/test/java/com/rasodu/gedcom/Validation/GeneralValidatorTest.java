@@ -17,7 +17,7 @@ import com.rasodu.gedcom.Utils.GedLogger;
 import com.rasodu.gedcom.core.Family;
 import com.rasodu.gedcom.core.Individual;
 
-public class GeneralValidatorTest {
+public class GeneralValidatorTest extends ValidatorLoader {
 	@Test //US01
     public void noDatesBeforeCurrentDateShouldProduceError() throws ParseException {
 		//arrange

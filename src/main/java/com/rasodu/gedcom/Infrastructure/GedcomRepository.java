@@ -89,4 +89,12 @@ public class GedcomRepository implements IGedcomRepository {
     	}
     	return children;
     }
+
+    public Individual GetParentOfFamilyId(String familyId, Spouse spouse) {
+        if(ContainsFamily(familyId))
+        {
+            return GetParentOfFamily(GetFamily(familyId), spouse);
+        }
+        return null;
+    }
 }

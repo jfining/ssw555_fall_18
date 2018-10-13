@@ -1,17 +1,17 @@
 package com.rasodu.gedcom.Validation;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 
 import com.rasodu.gedcom.Infrastructure.GedcomRepository;
 import com.rasodu.gedcom.Utils.GedLogger;
+import com.rasodu.gedcom.Utils.Helper;
 import com.rasodu.gedcom.core.Family;
 import com.rasodu.gedcom.core.IGedcomRepository;
 import com.rasodu.gedcom.core.Individual;
+import com.rasodu.gedcom.core.Spouse;
 
 public class IndividualValidator implements IValidator {
 
@@ -119,6 +119,26 @@ public class IndividualValidator implements IValidator {
 		}
 		return valid;
 	}
+
+	//US09
+	public boolean bornAfterParentsDeath()
+	{
+		boolean valid = true;
+		for(Individual ind : repository.GetAllIndividuals())
+		{
+			Individual husband = repository.GetParentOfFamilyId(ind.ChildOfFamily, Spouse.Husband);
+			Individual wife = repository.GetParentOfFamilyId(ind.ChildOfFamily, Spouse.Wife);
+			if(null != husband && null != husband.Death && Helper.DateGapLargerThenOnTimeLine(husband.Death, ind.Birthday,9, Helper.PeriodUnit.Months)) {
+				valid = false;
+				log.error("US09", ind, repository.GetFamily(ind.ChildOfFamily), "Individual is born after 9 months of fathers death.");
+			}
+			if(null != wife && null != wife.Death && wife.Death.compareTo(ind.Birthday) < 0){
+				valid = false;
+				log.error("US09", ind, repository.GetFamily(ind.ChildOfFamily), "Individual is bord after mother's death.");
+			}
+		}
+		return valid;
+	}
 	
 	//US12
 	public boolean parentsNotTooOld() {
@@ -144,7 +164,7 @@ public class IndividualValidator implements IValidator {
 				long diffFromFatherInMillies = ind.Birthday.getTime() - father.Birthday.getTime();
 				long diffFromMotherInDays = TimeUnit.DAYS.convert(diffFromMotherInMillies, TimeUnit.MILLISECONDS);
 				long diffFromFatherInDays = TimeUnit.DAYS.convert(diffFromFatherInMillies, TimeUnit.MILLISECONDS);
-				
+
 				if (diffFromMotherInDays > sixtyYearsInDays) {
 					log.error(userStory, ind, fam, "Individual cannot be greater than 60 years younger than mother.");
 					valid = false;
@@ -158,7 +178,6 @@ public class IndividualValidator implements IValidator {
 		return valid;
 	}
 	
-	
 	@Override
 	public boolean validate() {
 		boolean allTestsValid = true;
@@ -170,6 +189,9 @@ public class IndividualValidator implements IValidator {
 			allTestsValid = false;
 		}
 		if(!bornBeforeOrAfterMarriage()) {
+			allTestsValid = false;
+		}
+		if (!bornAfterParentsDeath()) {
 			allTestsValid = false;
 		}
 		if (!parentsNotTooOld()) {

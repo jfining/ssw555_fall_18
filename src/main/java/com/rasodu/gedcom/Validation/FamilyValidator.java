@@ -178,6 +178,18 @@ public class FamilyValidator implements IValidator {
 		}
 		return valid;
 	}
+
+	// US15
+	public boolean noMoreThanFifteenSiblings() {
+		boolean valid = true;
+		for(Family family : repository.GetAllFamilies()){
+			if(15 < family.ChildrenIds.size()) {
+				valid = false;
+				log.anomaly("US15", null, family, "The family has more than 15 siblings.");
+			}
+		}
+		return valid;
+	}
 	
 	// US16 Male last names
 	public boolean noMaleDifferentName() {
@@ -301,6 +313,9 @@ public class FamilyValidator implements IValidator {
 			allTestsValid= false;
 		}
 		if (!noBigamy()) {
+			allTestsValid = false;
+		}
+		if (!noMoreThanFifteenSiblings()){
 			allTestsValid = false;
 		}
 
