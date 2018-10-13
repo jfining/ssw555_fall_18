@@ -185,7 +185,7 @@ public class FamilyValidator implements IValidator {
 		for(Family family : repository.GetAllFamilies()){
 			if(15 < family.ChildrenIds.size()) {
 				valid = false;
-				log.anomaly("US15", null, family, "The family has more than 15 siblings");
+				log.anomaly("US15", null, family, "The family has more than 15 siblings.");
 			}
 		}
 		return valid;

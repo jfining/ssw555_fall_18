@@ -16,7 +16,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-public class FamilyValidatorTest {
+public class FamilyValidatorTest extends ValidatorLoader {
 	
 	private GedLogger logger;
 	private FamilyValidator famVali;
@@ -262,5 +262,19 @@ public class FamilyValidatorTest {
         //assert
         verifyNoMoreInteractions(logger);
         Assert.assertTrue(result);
+    }
+
+    //US15
+    @Test
+    public void noMoreThanFifteenSiblings(){
+	    //arrange
+        GedLogger logger = mock(GedLogger.class);
+        Load("test_us15", logger);
+        //act
+        boolean result = fv.noMoreThanFifteenSiblings();
+        //assert
+        verify(logger, Mockito.times(1)).anomaly("US15", null, repository.GetFamily("US15_FID1"), "The family has more than 15 siblings.");
+        verifyNoMoreInteractions(logger);
+        Assert.assertFalse(result);
     }
 }

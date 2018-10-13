@@ -4,11 +4,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.rasodu.gedcom.Infrastructure.GedComDataSetFile;
+import com.rasodu.gedcom.Infrastructure.GedcomRepository;
+import com.rasodu.gedcom.core.IGedcomDataset;
+import com.rasodu.gedcom.core.IGedcomRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -17,7 +23,23 @@ import com.rasodu.gedcom.Utils.GedLogger;
 import com.rasodu.gedcom.core.Family;
 import com.rasodu.gedcom.core.Individual;
 
-public class IndividualValidatorTest {
+public class IndividualValidatorTest extends ValidatorLoader {
+
+    //US09
+    @Test
+    public void bornAfterParentsDeath() {
+        //arrange
+        GedLogger logger = mock(GedLogger.class);
+        Load("test_us09", logger);
+        //act
+        boolean result = iv.bornAfterParentsDeath();
+        //assert
+        verify(logger, Mockito.times(1)).error("US09", repository.GetIndividual("US09_IID3"), repository.GetFamily("US09_FID1"), "Individual is born after 9 months of fathers death.");
+        verify(logger, Mockito.times(1)).error("US09", repository.GetIndividual("US09_IID3"), repository.GetFamily("US09_FID1"), "Individual is bord after mother's death.");
+        verifyNoMoreInteractions(logger);
+        Assert.assertFalse(result);
+    }
+
     //US12
     @Test
     public void parentsNotTooOldShouldProduceError() throws ParseException {

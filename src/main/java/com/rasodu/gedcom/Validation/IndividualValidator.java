@@ -130,11 +130,11 @@ public class IndividualValidator implements IValidator {
 			Individual wife = repository.GetParentOfFamilyId(ind.ChildOfFamily, Spouse.Wife);
 			if(null != husband && null != husband.Death && Helper.DateGapLargerThenOnTimeLine(husband.Death, ind.Birthday,9, Helper.PeriodUnit.Months)) {
 				valid = false;
-				log.error("US09", ind, repository.GetFamily(ind.ChildOfFamily), "Individual is born after 9 months of fathers death");
+				log.error("US09", ind, repository.GetFamily(ind.ChildOfFamily), "Individual is born after 9 months of fathers death.");
 			}
 			if(null != wife && null != wife.Death && wife.Death.compareTo(ind.Birthday) < 0){
 				valid = false;
-				log.error("US09", ind, repository.GetFamily(ind.ChildOfFamily), "Indivisual is bord after mother's death");
+				log.error("US09", ind, repository.GetFamily(ind.ChildOfFamily), "Individual is bord after mother's death.");
 			}
 		}
 		return valid;
