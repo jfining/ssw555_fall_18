@@ -2,6 +2,7 @@ package com.rasodu.gedcom.Validation;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -119,6 +120,34 @@ public class IndividualValidator implements IValidator {
 		return valid;
 	}
 	
+	//US12
+	public boolean parentsNotTooOld() {
+		String userStory = "US12";
+		boolean valid = true;
+		for (Individual ind : individualList) {
+			if (ind.ChildOfFamily != null) {
+				Family fam = repository.GetFamily(ind.ChildOfFamily);
+				Individual father = repository.GetIndividual(fam.HusbandId);
+				Individual mother = repository.GetIndividual(fam.WifeId);
+				long sixtyYearsInDays = 60 * 365;
+				long eightyYearsInDays = 80 * 365;
+				long diffFromMotherInMillies = ind.Birthday.getTime() - mother.Birthday.getTime();
+				long diffFromFatherInMillies = ind.Birthday.getTime() - father.Birthday.getTime();
+				long diffFromMotherInDays = TimeUnit.DAYS.convert(diffFromMotherInMillies, TimeUnit.MILLISECONDS);
+				long diffFromFatherInDays = TimeUnit.DAYS.convert(diffFromFatherInMillies, TimeUnit.MILLISECONDS);
+				
+				if (diffFromMotherInDays > sixtyYearsInDays) {
+					log.error(userStory, ind, fam, "Individual cannot be greater than 60 years younger than mother.");
+					valid = false;
+				}
+				if (diffFromFatherInDays > eightyYearsInDays) {
+					log.error(userStory, ind, fam, "Individual cannot be greater than 80 years younger than father.");
+					valid = false;
+				}
+			}
+		}
+		return valid;
+	}
 	
 	
 	@Override
@@ -132,6 +161,9 @@ public class IndividualValidator implements IValidator {
 			allTestsValid = false;
 		}
 		if(!bornBeforeOrAfterMarriage()) {
+			allTestsValid = false;
+		}
+		if (!parentsNotTooOld()) {
 			allTestsValid = false;
 		}
 
