@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.rasodu.gedcom.Infrastructure.GedcomRepository;
 import com.rasodu.gedcom.Utils.GedLogger;
+import com.rasodu.gedcom.Utils.Helper;
 import com.rasodu.gedcom.core.Family;
 import com.rasodu.gedcom.core.IGedcomRepository;
 import com.rasodu.gedcom.core.Individual;
@@ -86,22 +87,6 @@ public class FamilyValidator implements IValidator {
 					log.error("US05", wife, fam, "Family was married after wife's date of death");
 					valid = false;
 				}
-
-				// US10 Marriage must be after 14
-				if ((husband != null && husband.Birthday != null) && (wife != null && wife.Birthday != null) ) {
-
-					long husDiff = fam.Married.getTime() - husband.Birthday.getTime();
-					long wifeDiff = fam.Married.getTime() - wife.Birthday.getTime();
-
-					if (husDiff < 14) {
-						log.error("US10", husband, fam, "Husband married before 14");
-						valid = false;
-					}
-					if (wifeDiff < 14) {
-						log.error("US10", wife, fam, "Wife married before 14");
-						valid = false;
-					}
-				}
 			}
 		}
 		return valid;
@@ -126,6 +111,26 @@ public class FamilyValidator implements IValidator {
 			}
 		}
 		return valid;
+	}
+
+	// US10
+	public boolean noMarrageForAgeBeforeFourteen() {
+		boolean valid = true;
+		for (Family fam : repository.GetAllFamilies()){
+			if(fam.Married != null){
+				Individual husband = repository.GetParentOfFamily(fam, Spouse.Husband);
+				Individual wife = repository.GetParentOfFamily(fam, Spouse.Wife);
+				if (husband != null && husband.Birthday != null && Helper.DateWithinOnTimeline(husband.Birthday, fam.Married, 14, Helper.PeriodUnit.Years)){
+					log.error("US10", husband, fam, "Husband married before 14");
+					valid = false;
+				}
+				if (wife != null && wife.Birthday != null && Helper.DateWithinOnTimeline(wife.Birthday, fam.Married, 14, Helper.PeriodUnit.Years)) {
+					log.error("US10", wife, fam, "Wife married before 14");
+					valid = false;
+				}
+			}
+		}
+		return  valid;
 	}
 
 	//US13, US14
@@ -304,6 +309,9 @@ public class FamilyValidator implements IValidator {
 			allTestsValid = false;
 		}
 		if (!noDivorceAfterDeath()) {
+			allTestsValid = false;
+		}
+		if (!noMarrageForAgeBeforeFourteen()) {
 			allTestsValid = false;
 		}
 		if (!validateChildBirthdays()) {
