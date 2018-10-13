@@ -12,3 +12,4 @@ java -jar gedcom-disk-1.0-SNAPSHOT.jar ../Deliverables/UserStories/test_us08.ged
 java -jar gedcom-disk-1.0-SNAPSHOT.jar ../Deliverables/UserStories/test_us09.ged
 java -jar gedcom-disk-1.0-SNAPSHOT.jar ../Deliverables/UserStories/test_us11.ged
 java -jar gedcom-disk-1.0-SNAPSHOT.jar ../Deliverables/UserStories/test_us12.ged
+java -jar gedcom-disk-1.0-SNAPSHOT.jar ../Deliverables/UserStories/test_us15.ged

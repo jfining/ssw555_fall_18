@@ -84,7 +84,12 @@ public class ListToTableData {
         for (Family family : _families) {
             List<String> row = new ArrayList<String>();
             row.add(family.Id);
-            row.add(df.format(family.Married));
+            if(family.Married != null) {
+                row.add(df.format(family.Married));
+            }
+            else {
+                row.add("N/A");
+            }
             if (family.Divorced != null) {
                 row.add(df.format(family.Divorced));
             } else {
