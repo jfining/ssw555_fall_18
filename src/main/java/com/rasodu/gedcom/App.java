@@ -11,7 +11,6 @@ import com.rasodu.gedcom.core.Family;
 import com.rasodu.gedcom.core.IGedcomDataset;
 import com.rasodu.gedcom.core.Individual;
 
-import java.io.Console;
 import java.io.IOException;
 import java.util.List;
 
@@ -34,25 +33,25 @@ public class App {
             IGedcomDataset dataSet = GedComDataSetFile.GetInstance();
             List<Individual> individuals = dataSet.GetAllIndividuals();
             List<Family> families = dataSet.GetAllFamilies();
-            
+
             //Validate data
             GedLogger log = new GedLogger();
             GeneralValidator gv = new GeneralValidator(families, individuals, log);
             FamilyValidator fv = new FamilyValidator(families, individuals, log);
             IndividualValidator iv = new IndividualValidator(families, individuals, log);
-            
+
             boolean generalValid = gv.validate();
-            System.out.println("General Validation: "+String.valueOf(generalValid) + "\n");
+            System.out.println("General Validation: " + String.valueOf(generalValid) + "\n");
             boolean familyValid = fv.validate();
-            System.out.println("Family Validation: "+String.valueOf(familyValid) + "\n");
+            System.out.println("Family Validation: " + String.valueOf(familyValid) + "\n");
             boolean individualValid = iv.validate();
-            System.out.println("Individual Validation: "+String.valueOf(individualValid) + "\n");
-            
+            System.out.println("Individual Validation: " + String.valueOf(individualValid) + "\n");
+
             //get data to print
             ListToTableData lstotd = new ListToTableData(individuals, families);
             List<List<String>> individualsTable = lstotd.GetIndivisualTableData();
             List<List<String>> familiesTable = lstotd.GetFamilyTableData();
-            
+
             //print data
             TablePrinter tp = new TablePrinter();
             tp.PrintTable(individualsTable);
