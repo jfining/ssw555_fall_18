@@ -125,10 +125,19 @@ public class IndividualValidator implements IValidator {
 		String userStory = "US12";
 		boolean valid = true;
 		for (Individual ind : individualList) {
+			if (ind.Birthday == null) {
+				continue;
+			}
 			if (ind.ChildOfFamily != null) {
 				Family fam = repository.GetFamily(ind.ChildOfFamily);
 				Individual father = repository.GetIndividual(fam.HusbandId);
 				Individual mother = repository.GetIndividual(fam.WifeId);
+				if (father == null || mother == null) {
+					continue;
+				}
+				if (father.Birthday == null || mother.Birthday == null) {
+					continue;
+				}
 				long sixtyYearsInDays = 60 * 365;
 				long eightyYearsInDays = 80 * 365;
 				long diffFromMotherInMillies = ind.Birthday.getTime() - mother.Birthday.getTime();
