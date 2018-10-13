@@ -18,4 +18,6 @@ public interface IGedcomRepository {
     public Individual GetParentOfFamily(Family family, Spouse spouse);
     
     public List<Individual> GetChildrenOfFamily(Family family);
+
+    public Individual GetParentOfFamilyId(String familyId, Spouse spouse);
 }
