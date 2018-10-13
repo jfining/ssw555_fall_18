@@ -14,9 +14,9 @@ public interface IGedcomRepository {
     public boolean ContainsFamily(String FamilyId);
 
     public Family GetFamily(String FamilyId);
-    
+
     public Individual GetParentOfFamily(Family family, Spouse spouse);
-    
+
     public List<Individual> GetChildrenOfFamily(Family family);
 
     public Individual GetParentOfFamilyId(String familyId, Spouse spouse);

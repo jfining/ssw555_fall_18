@@ -18,7 +18,8 @@ public class ValidatorLoader {
     protected GeneralValidator gv;
     protected FamilyValidator fv;
     protected IndividualValidator iv;
-    protected void Load(String path, GedLogger log){
+
+    protected void Load(String path, GedLogger log) {
         try {
             //create path
             File resourcesDirectory = new File("Deliverables/UserStories");
@@ -33,8 +34,7 @@ public class ValidatorLoader {
             gv = new GeneralValidator(families, individuals, log);
             fv = new FamilyValidator(families, individuals, log);
             iv = new IndividualValidator(families, individuals, log);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }

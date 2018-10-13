@@ -28,13 +28,13 @@ public class Helper {
 
     public static boolean DateWithinOnTimeline(Date earlyDate, Date laterDate, float limit, PeriodUnit unit) {
         long diff = laterDate.getTime() - earlyDate.getTime();
-        if(diff < 0)
+        if (diff < 0)
             return false;
         long daysDiff = TimeUnit.MILLISECONDS.toDays(diff);
         return DatesWith(daysDiff, limit, unit);
     }
 
-    private static boolean DatesWith(long days, float limit, PeriodUnit unit){
+    private static boolean DatesWith(long days, float limit, PeriodUnit unit) {
         return (days / periodToDays.get(unit)) <= limit;
     }
 
