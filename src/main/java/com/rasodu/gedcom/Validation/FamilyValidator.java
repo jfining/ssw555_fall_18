@@ -266,6 +266,22 @@ public class FamilyValidator implements IValidator {
         return valid;
     }
 
+    //US19
+    public boolean firstCousinShouldNotMarry() {
+        boolean valid = true;
+        for (Family fam : repository.GetAllFamilies()) {
+            List<Individual> firstCousins = repository.GetChildrenAtLevel(fam, 1);
+            for (Individual cousin1 : firstCousins) {
+                for (Individual cousin2 : firstCousins) {
+                    if (repository.HasFamilyForSpouse(cousin1.Id, cousin2.Id)) {
+                        log.error("US19", cousin1, null, cousin1.Id + " is married to first cousin" + cousin2.Id);
+                    }
+                }
+            }
+        }
+        return valid;
+    }
+
     private List<Individual> insertionSortByBirthday(List<Individual> people) {
         int count = people.size();
         int oldestIndex = -1;
@@ -319,6 +335,9 @@ public class FamilyValidator implements IValidator {
             allTestsValid = false;
         }
         if (!noMoreThanFifteenSiblings()) {
+            allTestsValid = false;
+        }
+        if (!firstCousinShouldNotMarry()) {
             allTestsValid = false;
         }
 
