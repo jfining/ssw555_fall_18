@@ -278,4 +278,19 @@ public class FamilyValidatorTest extends ValidatorLoader {
         verifyNoMoreInteractions(logger);
         Assert.assertFalse(result);
     }
+
+    //US19
+    @Test
+    public void firstCousinShouldNotMarry() {
+        //arrange
+        GedLogger logger = mock(GedLogger.class);
+        Load("test_us19", logger);
+        //act
+        boolean result = fv.firstCousinShouldNotMarry();
+        //assert
+        Individual cousin1 = repository.GetIndividual("US19_IID2");
+        verify(logger, Mockito.times(1)).error("US19", cousin1, null, "US19_IID2 is married to first cousin US19_IID3.");
+        verifyNoMoreInteractions(logger);
+        Assert.assertFalse(result);
+    }
 }

@@ -1,6 +1,7 @@
 package com.rasodu.gedcom.Validation;
 
 import com.rasodu.gedcom.Infrastructure.GedcomRepository;
+import com.rasodu.gedcom.Processor.SortbyIndID;
 import com.rasodu.gedcom.Utils.GedLogger;
 import com.rasodu.gedcom.Utils.Helper;
 import com.rasodu.gedcom.core.Family;
@@ -8,10 +9,7 @@ import com.rasodu.gedcom.core.IGedcomRepository;
 import com.rasodu.gedcom.core.Individual;
 import com.rasodu.gedcom.core.Spouse;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class FamilyValidator implements IValidator {
 
@@ -271,10 +269,17 @@ public class FamilyValidator implements IValidator {
         boolean valid = true;
         for (Family fam : repository.GetAllFamilies()) {
             List<Individual> firstCousins = repository.GetChildrenAtLevel(fam, 1);
+            firstCousins.sort(new SortbyIndID());
+            HashSet<String> marrageChecked = new HashSet<>();
             for (Individual cousin1 : firstCousins) {
                 for (Individual cousin2 : firstCousins) {
+                    if (marrageChecked.contains(cousin1.Id + cousin2.Id)) {
+                        continue;
+                    }
+                    marrageChecked.add(cousin2.Id + cousin1.Id);
                     if (repository.HasFamilyForSpouse(cousin1.Id, cousin2.Id)) {
-                        log.error("US19", cousin1, null, cousin1.Id + " is married to first cousin" + cousin2.Id);
+                        log.error("US19", cousin1, null, cousin1.Id + " is married to first cousin " + cousin2.Id + ".");
+                        valid = false;
                     }
                 }
             }
