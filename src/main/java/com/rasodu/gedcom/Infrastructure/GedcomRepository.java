@@ -70,21 +70,27 @@ public class GedcomRepository implements IGedcomRepository {
         HashSet<Family> familyListForIndividual;
         for (Family fam : families) {
             //add husband family
-            if (familiesMapOnIndividualId.containsKey(fam.HusbandId)) {
-                familyListForIndividual = familiesMapOnIndividualId.get(fam.HusbandId);
-            } else {
-                familyListForIndividual = new HashSet<>();
+            if (fam.HusbandId != null) {
+
+                if (familiesMapOnIndividualId.containsKey(fam.HusbandId)) {
+                    familyListForIndividual = familiesMapOnIndividualId.get(fam.HusbandId);
+                } else {
+                    familyListForIndividual = new HashSet<>();
+                }
+                familyListForIndividual.add(fam);
+                familiesMapOnIndividualId.put(fam.HusbandId, familyListForIndividual);
+
             }
-            familyListForIndividual.add(fam);
-            familiesMapOnIndividualId.put(fam.HusbandId, familyListForIndividual);
             //add wife family
-            if (familiesMapOnIndividualId.containsKey(fam.WifeId)) {
-                familyListForIndividual = familiesMapOnIndividualId.get(fam.WifeId);
-            } else {
-                familyListForIndividual = new HashSet<>();
+            if (fam.WifeId != null) {
+                if (familiesMapOnIndividualId.containsKey(fam.WifeId)) {
+                    familyListForIndividual = familiesMapOnIndividualId.get(fam.WifeId);
+                } else {
+                    familyListForIndividual = new HashSet<>();
+                }
+                familyListForIndividual.add(fam);
+                familiesMapOnIndividualId.put(fam.WifeId, familyListForIndividual);
             }
-            familyListForIndividual.add(fam);
-            familiesMapOnIndividualId.put(fam.WifeId, familyListForIndividual);
         }
     }
 
@@ -165,6 +171,7 @@ public class GedcomRepository implements IGedcomRepository {
      */
     public List<Individual> GetChildrenAtLevel(Family family, int level) {
         HashSet<Family> families = new HashSet<Family>();
+        families.add(family);//For cases when HusbandId and WifeId is null
         families.addAll(GetFamiliesForSpouse(family.HusbandId));
         families.addAll(GetFamiliesForSpouse(family.WifeId));
         return GetChildrenAtLevel(families, level);
