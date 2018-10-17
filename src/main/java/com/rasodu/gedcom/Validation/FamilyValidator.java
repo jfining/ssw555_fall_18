@@ -348,16 +348,16 @@ public class FamilyValidator implements IValidator {
         if (!noMarrageForAgeBeforeFourteen()) {
             allTestsValid = false;
         }
-        if (!validateChildBirthdays()) {
-            allTestsValid = false;
-        }
-        if (!noMaleDifferentName()) {
-            allTestsValid = false;
-        }
         if (!noBigamy()) {
             allTestsValid = false;
         }
+        if (!validateChildBirthdays()) {
+            allTestsValid = false;
+        }
         if (!noMoreThanFifteenSiblings()) {
+            allTestsValid = false;
+        }
+        if (!noMaleDifferentName()) {
             allTestsValid = false;
         }
         if (!firstCousinShouldNotMarry()) {
