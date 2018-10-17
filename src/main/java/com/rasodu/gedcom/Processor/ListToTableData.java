@@ -122,11 +122,6 @@ public class ListToTableData {
     }
 }
 
-class SortbyIndID implements Comparator<Individual> {
-    public int compare(Individual a, Individual b) {
-        return a.Id.compareTo(b.Id);
-    }
-}
 
 class SortbyFmyID implements Comparator<Family> {
     public int compare(Family a, Family b) {

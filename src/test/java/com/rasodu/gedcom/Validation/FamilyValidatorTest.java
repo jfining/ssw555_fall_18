@@ -278,4 +278,32 @@ public class FamilyValidatorTest extends ValidatorLoader {
         verifyNoMoreInteractions(logger);
         Assert.assertFalse(result);
     }
+
+    //US19
+    @Test
+    public void firstCousinShouldNotMarry() {
+        //arrange
+        GedLogger logger = mock(GedLogger.class);
+        Load("test_us19", logger);
+        //act
+        boolean result = fv.firstCousinShouldNotMarry();
+        //assert
+        verify(logger, Mockito.times(1)).error("US19", repository.GetIndividual("US19_IID2"), repository.GetFamilyForSpouse("US19_IID2", "US19_IID3"), "US19_IID2 is married to first cousin US19_IID3.");
+        verifyNoMoreInteractions(logger);
+        Assert.assertFalse(result);
+    }
+
+    //US20
+    @Test
+    public void auntAndUncleShouldNotMarryNieceOrNephwe() {
+        //arrange
+        GedLogger logger = mock(GedLogger.class);
+        Load("test_us20", logger);
+        //act
+        boolean result = fv.auntAndUncleShouldNotMarryNieceOrNephwe();
+        //assert
+        verify(logger, Mockito.times(1)).error("US20", repository.GetIndividual("US20_IID1"), repository.GetFamilyForSpouse("US20_IID1", "US20_IID3"), "Aunt or uncle US20_IID1 is married to niece or nephew US20_IID3.");
+        verifyNoMoreInteractions(logger);
+        Assert.assertFalse(result);
+    }
 }
