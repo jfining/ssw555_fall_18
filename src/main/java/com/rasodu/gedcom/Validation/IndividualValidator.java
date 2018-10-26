@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import com.rasodu.gedcom.Infrastructure.GedcomRepository;
 import com.rasodu.gedcom.Utils.GedLogger;
@@ -119,6 +120,25 @@ public class IndividualValidator implements IValidator {
 		return valid;
 	}
 	
+	//US22
+	public boolean validateIdUniqueness() {
+		boolean valid = true;
+		HashMap<String, String> table = new HashMap<String, String>();
+		for(Individual ind: individualList) {
+			if(table.containsKey(ind.Id)) {
+				valid = false;
+				if(ind.Name.equals(table.get(ind.Id))){
+					log.error("US22", ind, null, "Individual is listed multiple times in the input data");
+				} else {
+					log.error("US22", ind, null, "Individual " + ind.Name + " shares their ID with " + table.get(ind.Id));
+				}
+			} else {
+				table.put(ind.Id, ind.Name);
+			}
+		}
+		return valid;
+	}
+	
 	
 	
 	@Override
@@ -132,6 +152,9 @@ public class IndividualValidator implements IValidator {
 			allTestsValid = false;
 		}
 		if(!bornBeforeOrAfterMarriage()) {
+			allTestsValid = false;
+		}
+		if(!validateIdUniqueness()) {
 			allTestsValid = false;
 		}
 

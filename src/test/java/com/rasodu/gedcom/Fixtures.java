@@ -73,6 +73,12 @@ public class Fixtures {
 		AddIndividual("indi09", "19900102", "Quadruplet /Max/", 'F', "");
 		AddIndividual("indi10", "19900101", "Quintuplet /Max/", 'M', "");
 		AddIndividual("indi11", "19900102", "Sextuplet /Max/", 'F', "");
+		
+		//ID collision for US22. Please continue from indi13.
+		AddIndividual("indi00", "19010606", "Bizarro /Max/", 'M', "");
+		
+		//Name/birthday collision for US23
+		AddIndividual("indi13", "19600101", "Mister /Max", 'M', "");
 	}
 	
 	private static void SetupFamilyFixtures() throws ParseException {
