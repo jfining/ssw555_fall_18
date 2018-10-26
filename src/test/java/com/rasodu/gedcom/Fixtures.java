@@ -1,11 +1,13 @@
 package com.rasodu.gedcom;
 
+import com.rasodu.gedcom.core.Family;
+import com.rasodu.gedcom.core.Individual;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.rasodu.gedcom.core.*;
 public class Fixtures {
 
 	private static SimpleDateFormat dateFormat;
