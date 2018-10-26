@@ -320,6 +320,20 @@ public class FamilyValidatorTest extends ValidatorLoader {
         verifyNoMoreInteractions(logger);
         Assert.assertFalse(result);
     }
+    
+    //US17
+    @Test
+    public void parentsShouldNotMarryDescendents() {
+    	//arrange
+    	GedLogger logger = mock(GedLogger.class);
+    	Load("test_us17", logger);
+    	//act
+    	boolean result = fv.parentsAndDescendantsShouldNotMarry();
+    	//assert
+    	verify(logger, Mockito.times(1)).error("US17", repository.GetIndividual("US17_IID3"), repository.GetFamily("US17_FID2"), "Child cannot be married to parent");
+    	verifyNoMoreInteractions(logger);
+    	Assert.assertFalse(result);
+    }
 
     //US19
     @Test
