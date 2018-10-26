@@ -1,0 +1,167 @@
+Error US01: IndividualId=US09_IID1 FamilyId=n/a message=Individual does not have a birthdate.
+Error US01: IndividualId=US09_IID2 FamilyId=n/a message=Individual does not have a birthdate.
+Error US01: IndividualId=US11_IID1 FamilyId=n/a message=Individual does not have a birthdate.
+Error US01: IndividualId=US11_IID2 FamilyId=n/a message=Individual does not have a birthdate.
+Error US01: IndividualId=US11_IID3 FamilyId=n/a message=Individual does not have a birthdate.
+Error US01: IndividualId=US16_IID1 FamilyId=n/a message=Individual does not have a birthdate.
+Error US01: IndividualId=US16_IID2 FamilyId=n/a message=Individual does not have a birthdate.
+General Validation: false
+
+Error US10: IndividualId=US10_IID1 FamilyId=US10_FID1 message=Husband married before 14
+Error US10: IndividualId=US10_IID2 FamilyId=US10_FID1 message=Wife married before 14
+Error US13: IndividualId=US13_IID2 FamilyId=US13_FID1 message=Child born between 1 day and 9 months after older sibling US13_IID1
+Error US13: IndividualId=US13_IID3 FamilyId=US13_FID1 message=Child born between 1 day and 9 months after older sibling US13_IID1
+Error US13: IndividualId=US13_IID3 FamilyId=US13_FID1 message=Child born between 1 day and 9 months after older sibling US13_IID2
+Error US14: IndividualId=US14_IID1 FamilyId=US14_FID1 message=Child has 5 or more siblings born at the same time
+Error US14: IndividualId=US14_IID2 FamilyId=US14_FID1 message=Child has 5 or more siblings born at the same time
+Error US14: IndividualId=US14_IID3 FamilyId=US14_FID1 message=Child has 5 or more siblings born at the same time
+Error US14: IndividualId=US14_IID4 FamilyId=US14_FID1 message=Child has 5 or more siblings born at the same time
+Error US14: IndividualId=US14_IID5 FamilyId=US14_FID1 message=Child has 5 or more siblings born at the same time
+Error US14: IndividualId=US14_IID6 FamilyId=US14_FID1 message=Child has 5 or more siblings born at the same time
+Error US16: IndividualId=US16_IID3 FamilyId=US16_FID1 message=Individual last name is different than Father'
+Error US11: IndividualId=US11_IID1 FamilyId=US11_FID1 message=Individual cannot be in more than one marriage.
+Error US11: IndividualId=US11_IID1 FamilyId=US11_FID2 message=Individual cannot be in more than one marriage.
+Anomaly US15: IndividualId=n/a FamilyId=US15_FID1 message=The family has more than 15 siblings.
+Family Validation: false
+
+Error US09: IndividualId=US09_IID3 FamilyId=US09_FID1 message=Individual is born after 9 months of fathers death.
+Error US09: IndividualId=US09_IID3 FamilyId=US09_FID1 message=Individual is bord after mother's death.
+Error US09: IndividualId=US16_IID3 FamilyId=US16_FID1 message=Individual is born after 9 months of fathers death.
+Error US09: IndividualId=US16_IID3 FamilyId=US16_FID1 message=Individual is bord after mother's death.
+Error US12: IndividualId=US12_IID3 FamilyId=US12_FID1 message=Individual cannot be greater than 60 years younger than mother.
+Error US12: IndividualId=US12_IID3 FamilyId=US12_FID1 message=Individual cannot be greater than 80 years younger than father.
+Individual Validation: false
+
+┌────────┬────────┬────────┬────────┬────────┬────────┬────────┬───────┬───────┐
+│ID      │Name    │Gender  │Birthday│Age     │Alive   │Death   │Child  │Spouse │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US09_IID│John    │M       │N/A     │N/A     │false   │1922-01-│N/A    │US09_FI│
+│1       │/Smith/ │        │        │        │        │10      │       │D1;    │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US09_IID│Sam     │F       │N/A     │N/A     │false   │1922-10-│N/A    │US09_FI│
+│2       │/Smith/ │        │        │        │        │10      │       │D2;    │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US09_IID│Wyn     │M       │1922-10-│96      │true    │N/A     │US09_FI│N/A    │
+│3       │/Smith/ │        │11      │        │        │        │D1;    │       │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US10_IID│John    │M       │1975-02-│43      │true    │N/A     │N/A    │US10_FI│
+│1       │/Smith/ │        │13      │        │        │        │       │D1;    │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US10_IID│Sam     │F       │1975-02-│43      │true    │N/A     │N/A    │US10_FI│
+│2       │/Smith/ │        │13      │        │        │        │       │D1;    │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US11_IID│John    │N       │N/A     │N/A     │true    │N/A     │N/A    │US11_FI│
+│1       │/Smith/ │        │        │        │        │        │       │D1;US11│
+│        │        │        │        │        │        │        │       │_FID2; │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US11_IID│Sam     │N       │N/A     │N/A     │true    │N/A     │N/A    │US11_FI│
+│2       │/Smith/ │        │        │        │        │        │       │D1;    │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US11_IID│Sam2    │N       │N/A     │N/A     │true    │N/A     │N/A    │US11_FI│
+│3       │/Smith/ │        │        │        │        │        │       │D1;    │
+├────────┼────────┴────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US12_IID│N                │1922-01-│96      │true    │N/A     │N/A    │US12_FI│
+│1       │                 │10      │        │        │        │       │D1;    │
+├────────┼─────────────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US12_IID│N                │1942-01-│76      │true    │N/A     │N/A    │US12_FI│
+│2       │                 │10      │        │        │        │       │D1;    │
+├────────┼─────────────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US12_IID│N                │2002-01-│16      │true    │N/A     │US12_FI│N/A    │
+│3       │                 │11      │        │        │        │D1;    │       │
+├────────┼─────────────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US13_IID│N                │1922-01-│96      │true    │N/A     │N/A    │US13_FI│
+│1       │                 │10      │        │        │        │       │D1;    │
+├────────┼─────────────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US13_IID│N                │1922-01-│96      │true    │N/A     │N/A    │US13_FI│
+│2       │                 │12      │        │        │        │       │D1;    │
+├────────┼─────────────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US13_IID│N                │1922-09-│96      │true    │N/A     │US11_FI│N/A    │
+│3       │                 │10      │        │        │        │D1;    │       │
+├────────┼─────────────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US14_IID│N                │1922-01-│96      │true    │N/A     │N/A    │US14_FI│
+│1       │                 │10      │        │        │        │       │D1;    │
+├────────┼─────────────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US14_IID│N                │1922-01-│96      │true    │N/A     │N/A    │US14_FI│
+│2       │                 │10      │        │        │        │       │D1;    │
+├────────┼─────────────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US14_IID│N                │1922-01-│96      │true    │N/A     │US11_FI│N/A    │
+│3       │                 │10      │        │        │        │D1;    │       │
+├────────┼─────────────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US14_IID│N                │1922-01-│96      │true    │N/A     │US11_FI│N/A    │
+│4       │                 │10      │        │        │        │D1;    │       │
+├────────┼─────────────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US14_IID│N                │1922-01-│96      │true    │N/A     │US11_FI│N/A    │
+│5       │                 │10      │        │        │        │D1;    │       │
+├────────┼─────────────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US14_IID│N                │1922-01-│96      │true    │N/A     │US11_FI│N/A    │
+│6       │                 │10      │        │        │        │D1;    │       │
+├────────┼────────┬────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US16_IID│John    │M       │N/A     │N/A     │false   │1922-01-│N/A    │US16_FI│
+│1       │/Smith/ │        │        │        │        │10      │       │D1;    │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US16_IID│Sam     │F       │N/A     │N/A     │false   │1922-10-│N/A    │US16_FI│
+│2       │/Smith/ │        │        │        │        │10      │       │D2;    │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼───────┼───────┤
+│US16_IID│Wyn     │M       │1922-10-│96      │true    │N/A     │US16_FI│N/A    │
+│3       │/Johnson│        │11      │        │        │        │D1;    │       │
+│        │/       │        │        │        │        │        │       │       │
+└────────┴────────┴────────┴────────┴────────┴────────┴────────┴───────┴───────┘
+┌─────────┬─────────┬─────────┬─────────┬─────────┬─────────┬─────────┬────────┐
+│ID       │Married  │Divorced │Husband  │Husband  │Wife ID  │Wife Name│Children│
+│         │         │         │ID       │Name     │         │         │        │
+├─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼────────┤
+│US09_FID1│N/A      │N/A      │US09_IID1│John     │US09_IID2│Sam      │US09_IID│
+│         │         │         │         │/Smith/  │         │/Smith/  │3;      │
+├─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼────────┤
+│US10_FID1│1988-01-1│N/A      │US10_IID1│John     │US10_IID2│Sam      │N/A     │
+│         │5        │         │         │/Smith/  │         │/Smith/  │        │
+├─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼────────┤
+│US11_FID1│N/A      │N/A      │US11_IID1│John     │US11_IID2│Sam      │N/A     │
+│         │         │         │         │/Smith/  │         │/Smith/  │        │
+├─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼────────┤
+│US11_FID2│N/A      │N/A      │US11_IID1│John     │US11_IID3│Sam2     │N/A     │
+│         │         │         │         │/Smith/  │         │/Smith/  │        │
+├─────────┼─────────┼─────────┼─────────┼─────────┴─────────┼─────────┴────────┤
+│US12_FID1│N/A      │N/A      │US12_IID1│US12_IID2          │US12_IID3;        │
+├─────────┼─────────┼─────────┼─────────┴─────────┬─────────┴─────────┬────────┤
+│US13_FID1│N/A      │N/A      │                   │                   │US13_IID│
+│         │         │         │                   │                   │1;US13_I│
+│         │         │         │                   │                   │ID2;US13│
+│         │         │         │                   │                   │_IID3;  │
+├─────────┼─────────┼─────────┼───────────────────┼───────────────────┼────────┤
+│US14_FID1│N/A      │N/A      │                   │                   │US14_IID│
+│         │         │         │                   │                   │1;US14_I│
+│         │         │         │                   │                   │ID2;US14│
+│         │         │         │                   │                   │_IID3;US│
+│         │         │         │                   │                   │14_IID4;│
+│         │         │         │                   │                   │US14_IID│
+│         │         │         │                   │                   │5;US14_I│
+│         │         │         │                   │                   │ID6;    │
+├─────────┼─────────┼─────────┼─────────┬─────────┼─────────┬─────────┼────────┤
+│US15_FID1│N/A      │N/A      │US15_IID1│         │US15_IID2│         │US15_IID│
+│         │         │         │         │         │         │         │3;US15_I│
+│         │         │         │         │         │         │         │ID4;US15│
+│         │         │         │         │         │         │         │_IID5;US│
+│         │         │         │         │         │         │         │15_IID6;│
+│         │         │         │         │         │         │         │US15_IID│
+│         │         │         │         │         │         │         │7;US15_I│
+│         │         │         │         │         │         │         │ID8;US15│
+│         │         │         │         │         │         │         │_IID9;US│
+│         │         │         │         │         │         │         │15_IID10│
+│         │         │         │         │         │         │         │;US15_II│
+│         │         │         │         │         │         │         │D11;US15│
+│         │         │         │         │         │         │         │_IID12;U│
+│         │         │         │         │         │         │         │S15_IID1│
+│         │         │         │         │         │         │         │3;US15_I│
+│         │         │         │         │         │         │         │ID14;US1│
+│         │         │         │         │         │         │         │5_IID15;│
+│         │         │         │         │         │         │         │US15_IID│
+│         │         │         │         │         │         │         │16;US15_│
+│         │         │         │         │         │         │         │IID17;US│
+│         │         │         │         │         │         │         │15_IID18│
+│         │         │         │         │         │         │         │;       │
+├─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────────┼────────┤
+│US16_FID1│N/A      │N/A      │US16_IID1│John     │US16_IID2│Sam      │US16_IID│
+│         │         │         │         │/Smith/  │         │/Smith/  │3;      │
+└─────────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────────┴────────┘
+

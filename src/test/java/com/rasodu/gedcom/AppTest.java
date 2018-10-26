@@ -1,27 +1,17 @@
 package com.rasodu.gedcom;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import com.rasodu.gedcom.core.Family;
+import com.rasodu.gedcom.core.Individual;
+import org.junit.Assert;
+import org.junit.Test;
 
-import java.awt.List;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.mockito.Mockito;
-
-import com.rasodu.gedcom.Utils.GedLogger;
-import com.rasodu.gedcom.Validation.IndividualValidator;
-import com.rasodu.gedcom.core.Family;
-import com.rasodu.gedcom.core.Individual;
+import static org.junit.Assert.*;
 
 /**
  * Unit test for simple App.
@@ -106,6 +96,8 @@ public class AppTest {
 
 	}
 
+	// US10 Test Cases
+
 	@Test
 	public void checkDateDiff() throws ParseException {
 		SimpleDateFormat format = new SimpleDateFormat("mm/dd/yyyy");
@@ -116,6 +108,8 @@ public class AppTest {
 		assertTrue(diff > 14);
 
 	}
+
+	// US16 Test Cases
 
 	@Test
 	public void bornBeforeOrAfterMarriageShouldProduceError() throws ParseException {
@@ -149,6 +143,41 @@ public class AppTest {
 
 		// assert
 		Assert.assertTrue(husbSplitName[1].equals(indSplitName[1]));
+	}
+
+	// US21
+	@Test
+	public void checkSpouseGender() throws ParseException {
+		Family fam = new Family();
+		Individual ind1 = new Individual();
+		fam.HusbandName = "Paul Verzosa";
+		ind1.Id = "US16_IID1";
+		ind1.Gender = 'M';
+		ind1.Name = "Paul Verzosa";
+
+		assertFalse(ind1.Gender == 'F');
+
+	}
+
+	// US23
+	@Test
+	public void checkUniqueNameBirthday() throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+		Individual ind1 = new Individual();
+		Individual ind2 = new Individual();
+		ind1.Name = "Paul Verzosa";
+		ind1.Birthday = sdf.parse("01/10/1981");
+		ind2.Name = "Paul Verzosa";
+		ind2.Birthday = sdf.parse("01/10/1981");
+
+		// assertTrue(ind1.Birthday.equals(ind2.Birthday));
+		// assertTrue(ind1.Name.equals(ind2.Name));
+
+		String ind1NameBday = ind1.Name + ind1.Birthday.toString();
+		String ind2NameBday = ind2.Name + ind2.Birthday.toString();
+
+		assertTrue(ind1NameBday.equals(ind2NameBday));
+
 	}
 
 }

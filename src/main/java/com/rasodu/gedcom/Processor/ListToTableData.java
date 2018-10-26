@@ -51,12 +51,12 @@ public class ListToTableData {
                 LocalDate death = indivisual.Death.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 row.add(String.valueOf(Period.between(birthday, death).getYears()));
             }
-            if (indivisual.Death != null) {
+            if (indivisual.Death == null) {
                 row.add(String.valueOf(true));
-                row.add(df.format(indivisual.Death));
+                row.add("N/A");
             } else {
                 row.add(String.valueOf(false));
-                row.add("N/A");
+                row.add(df.format(indivisual.Death));
             }
             if (indivisual.ChildOfFamily == null) {
                 row.add("N/A");
@@ -84,7 +84,11 @@ public class ListToTableData {
         for (Family family : _families) {
             List<String> row = new ArrayList<String>();
             row.add(family.Id);
-            row.add(df.format(family.Married));
+            if (family.Married != null) {
+                row.add(df.format(family.Married));
+            } else {
+                row.add("N/A");
+            }
             if (family.Divorced != null) {
                 row.add(df.format(family.Divorced));
             } else {
@@ -118,11 +122,6 @@ public class ListToTableData {
     }
 }
 
-class SortbyIndID implements Comparator<Individual> {
-    public int compare(Individual a, Individual b) {
-        return a.Id.compareTo(b.Id);
-    }
-}
 
 class SortbyFmyID implements Comparator<Family> {
     public int compare(Family a, Family b) {
