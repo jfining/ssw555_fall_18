@@ -47,7 +47,7 @@ public class FamilyValidatorTest extends ValidatorLoader {
     }
 
     @Test
-    public void noDivorceAfterDeathTestShouldBeSuccess() throws ParseException {
+    public void noDivorceAfterDeathTestShouldBeSuccess(){
         //arrange
         List<Individual> indList = new ArrayList<Individual>();
         indList.add(Fixtures.indiList.get(3));
@@ -64,7 +64,7 @@ public class FamilyValidatorTest extends ValidatorLoader {
     }
 
     @Test //US04
-    public void noDivorceBeforeMarriageTestShouldProduceError() throws ParseException {
+    public void noDivorceBeforeMarriageTestShouldProduceError(){
         //arrange
         List<Individual> indList = new ArrayList<Individual>();
         indList.add(Fixtures.indiList.get(0));
@@ -82,7 +82,7 @@ public class FamilyValidatorTest extends ValidatorLoader {
     }
 
     @Test //US04
-    public void noDivorceBeforeMarriageTestShouldBeSuccess() throws ParseException {
+    public void noDivorceBeforeMarriageTestShouldBeSuccess(){
         //arrange
         List<Individual> indList = new ArrayList<Individual>();
         indList.add(Fixtures.indiList.get(0));
@@ -156,6 +156,48 @@ public class FamilyValidatorTest extends ValidatorLoader {
         //assert
         verifyNoMoreInteractions(logger);
         Assert.assertTrue(result);
+    }
+    
+    @Test
+    public void testHusbandWifeUniquenessSuccess() {
+    	//arrange
+    	List<Individual> indList = new ArrayList<Individual>();
+        indList.add(Fixtures.indiList.get(0));
+        indList.add(Fixtures.indiList.get(1));
+        indList.add(Fixtures.indiList.get(2));
+        List<Family> famList = new ArrayList<Family>();
+        famList.add(Fixtures.famList.get(0));
+        famList.add(Fixtures.famList.get(1));
+        famVali.setFamilyList(famList);
+        famVali.setIndividualList(indList);
+        //act
+        boolean result = famVali.validateHusbandWifeUniqueness();
+        //assert
+        verifyNoMoreInteractions(logger);
+        Assert.assertTrue(result);
+    }
+    
+    @Test
+    public void testHusbandWifeUniquenessCollision() {
+    	//arrange
+    	List<Individual> indList = new ArrayList<Individual>();
+        indList.add(Fixtures.indiList.get(0));
+        indList.add(Fixtures.indiList.get(1));
+        indList.add(Fixtures.indiList.get(4));
+        indList.add(Fixtures.indiList.get(5));
+        indList.add(Fixtures.indiList.get(7));
+        List<Family> famList = new ArrayList<Family>();
+        famList.add(Fixtures.famList.get(0));
+        famList.add(Fixtures.famList.get(9));
+        famVali.setFamilyList(famList);
+        famVali.setIndividualList(indList);
+        //act
+        boolean result = famVali.validateHusbandWifeUniqueness();
+        //assert
+        verify(logger, Mockito.times(1)).error("US24", null, famList.get(1),
+        		"Family has the same husband (indi00) and wife (indi01) as family fam00");
+        verifyNoMoreInteractions(logger);
+        Assert.assertFalse(result);
     }
 
     //US11

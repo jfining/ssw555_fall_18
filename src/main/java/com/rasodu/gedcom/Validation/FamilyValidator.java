@@ -289,6 +289,23 @@ public class FamilyValidator implements IValidator {
 		}
 		return valid;
 	}
+	
+	// US24 Husband/Wife uniqueness
+	public boolean validateHusbandWifeUniqueness() {
+		boolean valid = true;
+		HashMap<HusbandWifeIdentifier, String> table = new HashMap<HusbandWifeIdentifier, String>();
+		for (Family fam : familyList) {
+			HusbandWifeIdentifier key = new HusbandWifeIdentifier(fam.HusbandId, fam.WifeId);
+			if(table.containsKey(key)) {
+				valid = false;
+				log.error("US24", null, fam, "Family has the same husband (" + fam.HusbandId +
+						") and wife (" + fam.WifeId + ") as family " + table.get(key));
+			} else {
+				table.put(key, fam.Id);
+			}
+		}
+		return valid;
+	}
 
 	// US20
 	public boolean auntAndUncleShouldNotMarryNieceOrNephwe() {
@@ -309,8 +326,9 @@ public class FamilyValidator implements IValidator {
 		}
 		return valid;
 	}
-
-	private List<Individual> insertionSortByBirthday(List<Individual> people) {
+	
+	
+	private List<Individual> insertionSortByBirthday(List<Individual> people){
 		int count = people.size();
 		int oldestIndex = -1;
 		Date oldestBirthday;
@@ -390,6 +408,9 @@ public class FamilyValidator implements IValidator {
 			allTestsValid = false;
 		}
 		if (!noMaleDifferentName()) {
+			allTestsValid = false;
+		}
+		if (!validateHusbandWifeUniqueness()) {
 			allTestsValid = false;
 		}
 		if (!firstCousinShouldNotMarry()) {
