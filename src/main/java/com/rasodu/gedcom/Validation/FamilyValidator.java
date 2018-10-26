@@ -265,6 +265,39 @@ public class FamilyValidator implements IValidator {
 		}
 		return valid;
 	}
+	
+	
+    //US17
+    public boolean parentsAndDescendantsShouldNotMarry() {
+    	String userStory = "US17";
+    	boolean valid = true;
+    	
+    	for (Individual ind : repository.GetAllIndividuals()) {
+    		if (ind.ChildOfFamily == null) {
+    			continue;
+    		}
+    		Family parentFamily = repository.GetFamily(ind.ChildOfFamily);
+    		for (Family fam : repository.GetAllFamilies()) {
+    			if (fam.HusbandId == null) continue;
+    			if (fam.WifeId == null) continue;
+    			if (fam.HusbandId.equals(ind.Id)) {
+    				if (fam.WifeId.equals(parentFamily.WifeId)) {
+    					log.error(userStory, ind, fam, "Child cannot be married to parent");
+        				valid = false;
+    				}
+    			}
+    			if (fam.WifeId.equals(ind.Id)) {
+    				if (fam.HusbandId.equals(parentFamily.HusbandId)) {
+    					log.error(userStory, ind, fam, "Child cannot be married to parent");
+        				valid = false;
+    				}
+    			}
+    			
+    		}
+    	}
+		return valid;
+    }
+	
 
 	// US19
 	public boolean firstCousinShouldNotMarry() {
@@ -420,6 +453,9 @@ public class FamilyValidator implements IValidator {
 			allTestsValid = false;
 		}
 		if (!genderRole2()) {
+			allTestsValid = false;
+		}
+		if (!parentsAndDescendantsShouldNotMarry()) {
 			allTestsValid = false;
 		}
 
