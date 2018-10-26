@@ -192,9 +192,9 @@ public class IndividualValidator implements IValidator {
 		Set<String> s = new HashSet<>();
 		for (Individual ind : individualList) {
 
-			String indNameBday = ind.Name + ind.Birthday.toString();
-
 			if (ind.Birthday != null && ind.Name != null) {
+
+				String indNameBday = ind.Name + ind.Birthday.toString();
 
 				if (s.add(indNameBday) == false) {
 					log.error(userStory, ind, null, "Individual has same name and birthday as another user");
