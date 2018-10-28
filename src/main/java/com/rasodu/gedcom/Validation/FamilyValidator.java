@@ -297,8 +297,28 @@ public class FamilyValidator implements IValidator {
     	}
 		return valid;
     }
-	
-
+    
+    //US18
+    public boolean siblingsShouldNotMarry() {
+    	String userStory = "US18";
+    	boolean valid = true;
+    	
+    	for (Family fam : repository.GetAllFamilies()) {
+    		Individual husband = repository.GetIndividual(fam.HusbandId);
+    		Individual wife = repository.GetIndividual(fam.WifeId);
+    		if (husband != null && wife != null) {
+	    		if (wife.ChildOfFamily != null && husband.ChildOfFamily != null) {
+	    			if (wife.ChildOfFamily.equals(husband.ChildOfFamily)) {
+		    			log.error(userStory, husband, fam, "Siblings cannot be married.");
+						valid = false;
+		    		}
+	    		}
+    		}
+    	}
+    	return valid;
+    }
+    
+    
 	// US19
 	public boolean firstCousinShouldNotMarry() {
 		boolean valid = true;
@@ -456,6 +476,9 @@ public class FamilyValidator implements IValidator {
 			allTestsValid = false;
 		}
 		if (!parentsAndDescendantsShouldNotMarry()) {
+			allTestsValid = false;
+		}
+		if (!siblingsShouldNotMarry()) {
 			allTestsValid = false;
 		}
 
