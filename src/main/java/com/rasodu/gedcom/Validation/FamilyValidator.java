@@ -400,17 +400,17 @@ public class FamilyValidator implements IValidator {
 
 		for (Family fam : repository.GetAllFamilies()) {
 
-			Individual father = repository.GetIndividual(fam.HusbandId);
-			Individual mother = repository.GetIndividual(fam.WifeId);
+			Individual husband = repository.GetIndividual(fam.HusbandId);
+			Individual wife = repository.GetIndividual(fam.WifeId);
 
-			if (father != null && father.Gender == 'F') {
+			if (husband != null && husband.Gender == 'F') {
 				valid = false;
-				log.error(userStory, father, fam, "Individual Gender is Female but is listed as a father.");
+				log.error(userStory, husband, fam, "Individual Gender is Female but is listed as a father.");
 			}
 
-			if (mother != null && mother.Gender == 'M') {
+			if (wife != null && wife.Gender == 'M') {
 				valid = false;
-				log.error(userStory, mother, fam, "Individual Gender is Male but is listed as a mother.");
+				log.error(userStory, wife, fam, "Individual Gender is Male but is listed as a mother.");
 			}
 
 		}
