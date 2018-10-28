@@ -177,6 +177,9 @@ public class IndividualValidator implements IValidator {
 			}
 			if (ind.ChildOfFamily != null) {
 				Family fam = repository.GetFamily(ind.ChildOfFamily);
+				if(fam == null || fam.HusbandId == null || fam.WifeId == null){
+					continue;
+				}
 				Individual father = repository.GetIndividual(fam.HusbandId);
 				Individual mother = repository.GetIndividual(fam.WifeId);
 				if (father == null || mother == null) {
