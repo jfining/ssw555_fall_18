@@ -277,6 +277,9 @@ public class FamilyValidator implements IValidator {
     			continue;
     		}
     		Family parentFamily = repository.GetFamily(ind.ChildOfFamily);
+			if (parentFamily == null){
+				continue;
+			}
     		for (Family fam : repository.GetAllFamilies()) {
     			if (fam.HusbandId == null) continue;
     			if (fam.WifeId == null) continue;
