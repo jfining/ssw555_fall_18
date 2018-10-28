@@ -154,6 +154,8 @@ public class AppTest {
 		ind1.Id = "US16_IID1";
 		ind1.Gender = 'M';
 		ind1.Name = "Paul Verzosa";
+		
+		//check if Gender check works
 
 		assertFalse(ind1.Gender == 'F');
 
@@ -170,8 +172,7 @@ public class AppTest {
 		ind2.Name = "Paul Verzosa";
 		ind2.Birthday = sdf.parse("01/10/1981");
 
-		// assertTrue(ind1.Birthday.equals(ind2.Birthday));
-		// assertTrue(ind1.Name.equals(ind2.Name));
+		//test to concat to string
 
 		String ind1NameBday = ind1.Name + ind1.Birthday.toString();
 		String ind2NameBday = ind2.Name + ind2.Birthday.toString();

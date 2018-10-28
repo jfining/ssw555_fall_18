@@ -395,7 +395,7 @@ public class FamilyValidator implements IValidator {
 	//US21
 
 	public boolean genderRole2() {
-		String userStory = "US21A";
+		String userStory = "US21";
 		boolean valid = true;
 
 		for (Family fam : repository.GetAllFamilies()) {
@@ -405,12 +405,12 @@ public class FamilyValidator implements IValidator {
 
 			if (father != null && father.Gender == 'F') {
 				valid = false;
-				log.error(userStory, father, null, "Individual Gender is Female but is listed as a husband.");
+				log.error(userStory, father, fam, "Individual Gender is Female but is listed as a father.");
 			}
 
 			if (mother != null && mother.Gender == 'M') {
 				valid = false;
-				log.error(userStory, mother, null, "Individual Gender is Male but is listed as a wife.");
+				log.error(userStory, mother, fam, "Individual Gender is Male but is listed as a mother.");
 			}
 
 		}
