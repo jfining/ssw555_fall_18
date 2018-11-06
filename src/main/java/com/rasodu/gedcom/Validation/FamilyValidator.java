@@ -414,9 +414,7 @@ public class FamilyValidator implements IValidator {
 		return sorted;
 	}
 	
-	
 	//US21
-
 	public boolean genderRole2() {
 		String userStory = "US21";
 		boolean valid = true;
@@ -439,6 +437,69 @@ public class FamilyValidator implements IValidator {
 		}
 		return valid;
 
+	}
+	
+	//US32
+	public void listMultipleBirths() {
+		for (Family fam : familyList) {
+			List<Individual> children = repository.GetChildrenOfFamily(fam);
+
+			// sort children by birthday
+			children = insertionSortByBirthday(children);
+			if (children.isEmpty()) {
+				continue;
+			}
+
+			// List all children born up to a day after their older sibling
+			Calendar calendar = Calendar.getInstance();
+			List<Individual> simultaneousBirths;
+			while (children.size() > 0) {
+				simultaneousBirths = new ArrayList<Individual>();
+				calendar.setTime(children.get(0).Birthday);
+				calendar.add(Calendar.DATE, 1);
+				Date maxTwinBirthday = calendar.getTime();
+				Individual[] tempChildren = children.toArray(new Individual[0]);
+				// Group the oldest remaining sibling with all siblings born up to a day later
+				for (Individual child : tempChildren) {
+					if(child.Birthday.after(maxTwinBirthday)) {
+						//If the child is born over a day later, they start a new group
+						break;
+					}
+					simultaneousBirths.add(child);
+					children.remove(child);
+				}
+				if (simultaneousBirths.size() > 1) {
+					log.info("US32", null, fam, "Family has multiple simultaneous births: " + Individual.ListPeople(simultaneousBirths));
+				}
+			}
+		}
+	}
+	
+	//US34
+	public void listCreepyMarriages() {
+		for (Family fam: familyList) {
+			if(fam.Married == null) {
+				continue;
+			}
+			Individual husband = repository.GetParentOfFamily(fam, Spouse.Husband);
+			Individual wife = repository.GetParentOfFamily(fam, Spouse.Wife);
+			if(husband == null || wife == null) {
+				continue;
+			}
+			if(husband.Birthday == null | wife.Birthday == null) {
+				continue;
+			}
+			long husbandAgeAtMarriage = fam.Married.getTime() - husband.Birthday.getTime();
+			long wifeAgeAtMarriage = fam.Married.getTime() - wife.Birthday.getTime();
+			if(husbandAgeAtMarriage >= wifeAgeAtMarriage * 2) {
+				log.info("US34", null, fam, "Husband " + husband.NameAndId() + " married " + wife.NameAndId() +
+						" who was half his age or younger");
+			}
+			else if(wifeAgeAtMarriage >= husbandAgeAtMarriage * 2) {
+				log.info("US34", null, fam, "Wife " + wife.NameAndId() + " married " + husband.NameAndId() +
+						" who was half her age or younger");
+			}
+		}
 	}
 
 	@Override
@@ -484,7 +545,8 @@ public class FamilyValidator implements IValidator {
 		if (!siblingsShouldNotMarry()) {
 			allTestsValid = false;
 		}
-
+		listMultipleBirths();
+		listCreepyMarriages();
 		return allTestsValid;
 	}
 

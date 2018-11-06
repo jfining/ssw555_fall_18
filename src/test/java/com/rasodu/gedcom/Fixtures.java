@@ -81,6 +81,14 @@ public class Fixtures {
 		
 		//Name/birthday collision for US23
 		AddIndividual("indi13", "19600101", "Mister /Max", 'M', "");
+		
+		//Creepy husband and wife pairs to test US34
+		AddIndividual("indi14", "19600101", "OldHusband /Creepy/", 'M', "");
+		AddIndividual("indi15", "19800101", "Lolita /Creepy/", 'F', "");
+		AddIndividual("indi16", "19800101", "Oedipus /Complex/", 'M', "");
+		AddIndividual("indi17", "19600101", "OldLady /Complex/", 'M', "");
+		
+		
 	}
 	
 	private static void SetupFamilyFixtures() throws ParseException {
@@ -124,5 +132,11 @@ public class Fixtures {
 		
 		//Family 12: Tests US14 sextuplets - all births should be anomalous
 		AddFamily("fam12", "19850101", "indi00", "indi01", "", new String[] {"indi04", "indi05", "indi08", "indi09", "indi10", "indi11"});
+		
+		//Family 13: Tests US34 creepy old husband
+		AddFamily("fam13", "19990101", "indi14", "indi15", "", new String[0]);
+		
+		//Family 14: Tests US34 creepy old wife
+		AddFamily("fam14", "19990101", "indi16", "indi17", "", new String[0]);
 	}
 }
