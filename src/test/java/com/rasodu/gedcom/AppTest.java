@@ -154,8 +154,8 @@ public class AppTest {
 		ind1.Id = "US16_IID1";
 		ind1.Gender = 'M';
 		ind1.Name = "Paul Verzosa";
-		
-		//check if Gender check works
+
+		// check if Gender check works
 
 		assertFalse(ind1.Gender == 'F');
 
@@ -172,12 +172,46 @@ public class AppTest {
 		ind2.Name = "Paul Verzosa";
 		ind2.Birthday = sdf.parse("01/10/1981");
 
-		//test to concat to string
+		// test to concat to string
 
 		String ind1NameBday = ind1.Name + ind1.Birthday.toString();
 		String ind2NameBday = ind2.Name + ind2.Birthday.toString();
 
 		assertTrue(ind1NameBday.equals(ind2NameBday));
+
+	}
+
+	// US35
+	@Test
+	public void checkRecentBirthday() throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+		Individual ind1 = new Individual();
+		ind1.Name = "Paul Verzosa";
+		ind1.Birthday = sdf.parse("11/05/2018");
+
+		Date today = new Date();
+
+		long diff = today.getTime() - ind1.Birthday.getTime();
+		float daysBetween = (diff / (1000 * 60 * 60 * 24));
+
+		assertTrue(daysBetween < 30);
+
+	}
+	
+	// US36
+	@Test
+	public void checkRecentDeath() throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+		Individual ind1 = new Individual();
+		ind1.Name = "Nell Hill";
+		ind1.Death = sdf.parse("11/05/2018");
+
+		Date today = new Date();
+
+		long diff = today.getTime() - ind1.Death.getTime();
+		float daysBetween = (diff / (1000 * 60 * 60 * 24));
+
+		assertTrue(daysBetween < 30);
 
 	}
 

@@ -123,18 +123,19 @@ public class IndividualValidator implements IValidator {
 		}
 		return valid;
 	}
-	
-	//US22
+
+	// US22
 	public boolean validateIdUniqueness() {
 		boolean valid = true;
 		HashMap<String, String> table = new HashMap<String, String>();
-		for(Individual ind: individualList) {
-			if(table.containsKey(ind.Id)) {
+		for (Individual ind : individualList) {
+			if (table.containsKey(ind.Id)) {
 				valid = false;
-				if(ind.Name.equals(table.get(ind.Id))){
+				if (ind.Name.equals(table.get(ind.Id))) {
 					log.error("US22", ind, null, "Individual is listed multiple times in the input data");
 				} else {
-					log.error("US22", ind, null, "Individual " + ind.Name + " shares their ID with " + table.get(ind.Id));
+					log.error("US22", ind, null,
+							"Individual " + ind.Name + " shares their ID with " + table.get(ind.Id));
 				}
 			} else {
 				table.put(ind.Id, ind.Name);
@@ -177,7 +178,7 @@ public class IndividualValidator implements IValidator {
 			}
 			if (ind.ChildOfFamily != null) {
 				Family fam = repository.GetFamily(ind.ChildOfFamily);
-				if(fam == null || fam.HusbandId == null || fam.WifeId == null){
+				if (fam == null || fam.HusbandId == null || fam.WifeId == null) {
 					continue;
 				}
 				Individual father = repository.GetIndividual(fam.HusbandId);
@@ -229,6 +230,50 @@ public class IndividualValidator implements IValidator {
 		return valid;
 	}
 
+	// US35
+
+	private boolean recentBirths() {
+		String userStory = "US35";
+		boolean valid = true;
+		Date today = new Date();
+
+		for (Individual ind : individualList) {
+			if (ind.Id != null) {
+				if (ind.Birthday != null) {
+					long diff = today.getTime() - ind.Birthday.getTime();
+					float daysBetween = (diff / (1000 * 60 * 60 * 24));
+					if (daysBetween < 30) {
+						log.error(userStory, ind, null, "Individual " + ind.Id + " was born within 30 days");
+						valid = false;
+					}
+				}
+			}
+		}
+		return valid;
+	}
+
+	// US36
+
+	private boolean recentDeaths() {
+		String userStory = "US36";
+		boolean valid = true;
+		Date today = new Date();
+
+		for (Individual ind : individualList) {
+			if (ind.Id != null) {
+				if (ind.Death != null) {
+					long diff = today.getTime() - ind.Death.getTime();
+					float daysBetween = (diff / (1000 * 60 * 60 * 24));
+					if (daysBetween < 30) {
+						log.error(userStory, ind, null, "Individual " + ind.Id + " has passed away within 30 days");
+						valid = false;
+					}
+				}
+			}
+		}
+		return valid;
+	}
+
 	@Override
 	public boolean validate() {
 		boolean allTestsValid = true;
@@ -251,9 +296,16 @@ public class IndividualValidator implements IValidator {
 		if (!uniqueNameBirthday()) {
 			allTestsValid = false;
 		}
-		if(!validateIdUniqueness()) {
+		if (!validateIdUniqueness()) {
 			allTestsValid = false;
 		}
+		if (!recentBirths()) {
+			allTestsValid = false;
+		}
+		if (!recentDeaths()) {
+			allTestsValid = false;
+		}
+		
 
 		return allTestsValid;
 	}
