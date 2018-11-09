@@ -1,0 +1,14 @@
+0 NOTE https://github.com/jfining/ssw555_fall_18
+0 HEAD
+0 I75 INDI
+1 NAME Justin /Smith/
+1 SEX F
+1 BIRT
+2 DATE 5 NOV 2018
+0 I76 INDI
+1 NAME Janet /Hill/
+1 SEX F
+1 BIRT
+2 DATE 13 FEB 1981
+1 DEAT
+2 DATE 1 NOV 2018
