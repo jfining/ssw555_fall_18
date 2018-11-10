@@ -439,6 +439,23 @@ public class FamilyValidator implements IValidator {
 
 	}
 	
+	//US30
+	public void listLivingMarried() {
+		String userStory = "US30";
+		for (Family fam : familyList) {
+			if (fam.Divorced == null) {
+				Individual husband = repository.GetIndividual(fam.HusbandId);
+				Individual wife = repository.GetIndividual(fam.WifeId);
+				if (husband.Death == null) {
+					log.info(userStory, husband, fam, "Individual is alive and married.");
+				}
+				if (wife.Death == null) {
+					log.info(userStory, wife, fam, "Individual is alive and married.");
+				}
+			}
+		}
+	}
+	
 	//US32
 	public void listMultipleBirths() {
 		for (Family fam : familyList) {
