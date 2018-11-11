@@ -7,6 +7,7 @@ import com.rasodu.gedcom.core.Family;
 import com.rasodu.gedcom.core.IGedcomRepository;
 import com.rasodu.gedcom.core.Individual;
 import com.rasodu.gedcom.core.Spouse;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -230,6 +231,28 @@ public class IndividualValidator implements IValidator {
 		return valid;
 	}
 
+	// US29
+    public void printDeceased() {
+	    for(Individual ind : repository.GetAllIndividuals()){
+	        if(ind.Death != null){
+	            log.info("US29", ind, null, ind.Id + " is deceased");
+            }
+        }
+    }
+
+    // US33
+    public void printOrphans() {
+	    for (Family fam : repository.GetAllFamilies()) {
+	        Individual husband = repository.GetParentOfFamily(fam, Spouse.Husband);
+            Individual wife = repository.GetParentOfFamily(fam, Spouse.Wife);
+            if( husband != null && husband.Death != null && wife != null && wife.Death != null) {
+                for(Individual ind : repository.GetChildrenOfFamily(fam)) {
+                    log.info("US33", ind, null, ind.Id + " is orphan");
+                }
+            }
+        }
+    }
+
 	// US35
 
 	private boolean recentBirths() {
@@ -299,14 +322,14 @@ public class IndividualValidator implements IValidator {
 		if (!validateIdUniqueness()) {
 			allTestsValid = false;
 		}
+        printDeceased();
+        printOrphans();
 		if (!recentBirths()) {
 			allTestsValid = false;
 		}
 		if (!recentDeaths()) {
 			allTestsValid = false;
 		}
-		
-
 		return allTestsValid;
 	}
 

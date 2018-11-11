@@ -136,4 +136,30 @@ public class IndividualValidatorTest extends ValidatorLoader {
         verifyNoMoreInteractions(logger);
         Assert.assertTrue(result);
     }
+
+    //US29
+    @Test
+    public void printDeceased() {
+        //arrange
+        GedLogger logger = mock(GedLogger.class);
+        Load("test_us29", logger);
+        //act
+        iv.printDeceased();
+        //assert
+        verify(logger, Mockito.times(1)).info("US29", repository.GetIndividual("US29_IID1"), null, "US29_IID1 is deceased");
+        verifyNoMoreInteractions(logger);
+    }
+
+    //US33
+    @Test
+    public void printOrphans() {
+        //arrange
+        GedLogger logger = mock(GedLogger.class);
+        Load("test_us33", logger);
+        //act
+        iv.printOrphans();
+        //assert
+        verify(logger, Mockito.times(1)).info("US33", repository.GetIndividual("US33_IID3"), null, "US33_IID3 is orphan");
+        verifyNoMoreInteractions(logger);
+    }
 }
