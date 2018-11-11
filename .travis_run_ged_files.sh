@@ -4,6 +4,7 @@ pwd
 mvn test -B
 mvn package -DskipTests
 cd target
+java -jar gedcom-disk-1.0-SNAPSHOT.jar ../Deliverables/Project10/proj10test.ged
 java -jar gedcom-disk-1.0-SNAPSHOT.jar ../Deliverables/Project8/proj8test.ged
 java -jar gedcom-disk-1.0-SNAPSHOT.jar ../Deliverables/Project6/proj6test.ged
 java -jar gedcom-disk-1.0-SNAPSHOT.jar ../Deliverables/Project4/proj4test.ged
