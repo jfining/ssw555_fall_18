@@ -232,31 +232,25 @@ public class IndividualValidator implements IValidator {
 	}
 
 	// US29
-    public boolean printDeceased() {
-	    boolean valid = true;
+    public void printDeceased() {
 	    for(Individual ind : repository.GetAllIndividuals()){
 	        if(ind.Death != null){
-	            valid = false;
 	            log.info("US29", ind, null, ind.Id + " is deceased");
             }
         }
-        return valid;
     }
 
     // US33
-    public boolean printOrphans() {
-	    boolean valid = true;
+    public void printOrphans() {
 	    for (Family fam : repository.GetAllFamilies()) {
 	        Individual husband = repository.GetParentOfFamily(fam, Spouse.Husband);
             Individual wife = repository.GetParentOfFamily(fam, Spouse.Wife);
             if( husband != null && husband.Death != null && wife != null && wife.Death != null) {
                 for(Individual ind : repository.GetChildrenOfFamily(fam)) {
-                    valid = false;
                     log.info("US33", ind, null, ind.Id + " is orphan");
                 }
             }
         }
-        return valid;
     }
 
 	// US35
@@ -328,20 +322,14 @@ public class IndividualValidator implements IValidator {
 		if (!validateIdUniqueness()) {
 			allTestsValid = false;
 		}
-		if (!printDeceased()){
-		    allTestsValid = false;
-        }
-        if (!printOrphans()) {
-            allTestsValid = false;
-        }
+        printDeceased();
+        printOrphans();
 		if (!recentBirths()) {
 			allTestsValid = false;
 		}
 		if (!recentDeaths()) {
 			allTestsValid = false;
 		}
-		
-
 		return allTestsValid;
 	}
 

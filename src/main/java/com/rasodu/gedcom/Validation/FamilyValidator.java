@@ -446,10 +446,10 @@ public class FamilyValidator implements IValidator {
 			if (fam.Divorced == null) {
 				Individual husband = repository.GetIndividual(fam.HusbandId);
 				Individual wife = repository.GetIndividual(fam.WifeId);
-				if (husband.Death == null) {
+				if (husband != null && husband.Death == null) {
 					log.info(userStory, husband, fam, "Individual is alive and married.");
 				}
-				if (wife.Death == null) {
+				if (wife != null && wife.Death == null) {
 					log.info(userStory, wife, fam, "Individual is alive and married.");
 				}
 			}
@@ -562,6 +562,7 @@ public class FamilyValidator implements IValidator {
 		if (!siblingsShouldNotMarry()) {
 			allTestsValid = false;
 		}
+        listLivingMarried();
 		listMultipleBirths();
 		listCreepyMarriages();
 		return allTestsValid;
