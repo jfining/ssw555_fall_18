@@ -101,11 +101,12 @@ public class AppTest {
 	@Test
 	public void checkDateDiff() throws ParseException {
 		SimpleDateFormat format = new SimpleDateFormat("mm/dd/yyyy");
-		Date deathDate = format.parse("1/17/1989");
+		Date marriageDate = format.parse("1/17/1989");
 		Date birthDate = format.parse("10/17/1988");
-		long diff = deathDate.getTime() - birthDate.getTime();
+		long diff = marriageDate.getTime() - birthDate.getTime();
+		float husYearsBetween = (diff / (1000 * 60 * 60 * 24 * 365));
 
-		assertTrue(diff > 14);
+		assertTrue(husYearsBetween > 14);
 
 	}
 

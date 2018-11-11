@@ -131,6 +131,38 @@ public class FamilyValidator implements IValidator {
 		return valid;
 	}
 
+	// US10
+
+	private boolean userStory10() {
+		String userStory = "US10";
+		boolean valid = true;
+		Date today = new Date();
+
+		for (Family fam : familyList) {
+			if (fam.Id != null) {
+				if (fam.Married != null) {
+				Individual husband = repository.GetParentOfFamily(fam, Spouse.Husband);
+				Individual wife = repository.GetParentOfFamily(fam, Spouse.Wife);
+				if ((husband != null && husband.Birthday != null) || (wife != null && wife.Birthday !=null)) {
+					long husDiff = fam.Married.getTime() - husband.Birthday.getTime();
+					long wifeDiff = fam.Married.getTime() - wife.Birthday.getTime();
+					float husYearsBetween = (husDiff / (1000 * 60 * 60 * 24 * 365));
+					float wifeYearsBetween = (wifeDiff / (1000 * 60 * 60 * 24 * 365));
+					if (husYearsBetween < 14) {
+						log.error("US10", husband, fam, "Husband married before 14");
+						valid = false;
+					}
+					if (wifeYearsBetween < 14) {
+						log.error("US10", wife, fam, "Wife married before 14");
+						valid = false;
+					}
+				}
+			}
+		}
+		}
+		return valid;
+	}
+
 	// US13, US14
 	public boolean validateChildBirthdays() {
 		boolean valid = true;
@@ -265,63 +297,63 @@ public class FamilyValidator implements IValidator {
 		}
 		return valid;
 	}
-	
-	
-    //US17
-    public boolean parentsAndDescendantsShouldNotMarry() {
-    	String userStory = "US17";
-    	boolean valid = true;
-    	
-    	for (Individual ind : repository.GetAllIndividuals()) {
-    		if (ind.ChildOfFamily == null) {
-    			continue;
-    		}
-    		Family parentFamily = repository.GetFamily(ind.ChildOfFamily);
-			if (parentFamily == null){
+
+	// US17
+	public boolean parentsAndDescendantsShouldNotMarry() {
+		String userStory = "US17";
+		boolean valid = true;
+
+		for (Individual ind : repository.GetAllIndividuals()) {
+			if (ind.ChildOfFamily == null) {
 				continue;
 			}
-    		for (Family fam : repository.GetAllFamilies()) {
-    			if (fam.HusbandId == null) continue;
-    			if (fam.WifeId == null) continue;
-    			if (fam.HusbandId.equals(ind.Id)) {
-    				if (fam.WifeId.equals(parentFamily.WifeId)) {
-    					log.error(userStory, ind, fam, "Child cannot be married to parent");
-        				valid = false;
-    				}
-    			}
-    			if (fam.WifeId.equals(ind.Id)) {
-    				if (fam.HusbandId.equals(parentFamily.HusbandId)) {
-    					log.error(userStory, ind, fam, "Child cannot be married to parent");
-        				valid = false;
-    				}
-    			}
-    			
-    		}
-    	}
-		return valid;
-    }
-    
-    //US18
-    public boolean siblingsShouldNotMarry() {
-    	String userStory = "US18";
-    	boolean valid = true;
-    	
-    	for (Family fam : repository.GetAllFamilies()) {
-    		Individual husband = repository.GetIndividual(fam.HusbandId);
-    		Individual wife = repository.GetIndividual(fam.WifeId);
-    		if (husband != null && wife != null) {
-	    		if (wife.ChildOfFamily != null && husband.ChildOfFamily != null) {
-	    			if (wife.ChildOfFamily.equals(husband.ChildOfFamily)) {
-		    			log.error(userStory, husband, fam, "Siblings cannot be married.");
+			Family parentFamily = repository.GetFamily(ind.ChildOfFamily);
+			if (parentFamily == null) {
+				continue;
+			}
+			for (Family fam : repository.GetAllFamilies()) {
+				if (fam.HusbandId == null)
+					continue;
+				if (fam.WifeId == null)
+					continue;
+				if (fam.HusbandId.equals(ind.Id)) {
+					if (fam.WifeId.equals(parentFamily.WifeId)) {
+						log.error(userStory, ind, fam, "Child cannot be married to parent");
 						valid = false;
-		    		}
-	    		}
-    		}
-    	}
-    	return valid;
-    }
-    
-    
+					}
+				}
+				if (fam.WifeId.equals(ind.Id)) {
+					if (fam.HusbandId.equals(parentFamily.HusbandId)) {
+						log.error(userStory, ind, fam, "Child cannot be married to parent");
+						valid = false;
+					}
+				}
+
+			}
+		}
+		return valid;
+	}
+
+	// US18
+	public boolean siblingsShouldNotMarry() {
+		String userStory = "US18";
+		boolean valid = true;
+
+		for (Family fam : repository.GetAllFamilies()) {
+			Individual husband = repository.GetIndividual(fam.HusbandId);
+			Individual wife = repository.GetIndividual(fam.WifeId);
+			if (husband != null && wife != null) {
+				if (wife.ChildOfFamily != null && husband.ChildOfFamily != null) {
+					if (wife.ChildOfFamily.equals(husband.ChildOfFamily)) {
+						log.error(userStory, husband, fam, "Siblings cannot be married.");
+						valid = false;
+					}
+				}
+			}
+		}
+		return valid;
+	}
+
 	// US19
 	public boolean firstCousinShouldNotMarry() {
 		boolean valid = true;
@@ -345,17 +377,17 @@ public class FamilyValidator implements IValidator {
 		}
 		return valid;
 	}
-	
+
 	// US24 Husband/Wife uniqueness
 	public boolean validateHusbandWifeUniqueness() {
 		boolean valid = true;
 		HashMap<HusbandWifeIdentifier, String> table = new HashMap<HusbandWifeIdentifier, String>();
 		for (Family fam : familyList) {
 			HusbandWifeIdentifier key = new HusbandWifeIdentifier(fam.HusbandId, fam.WifeId);
-			if(table.containsKey(key)) {
+			if (table.containsKey(key)) {
 				valid = false;
-				log.error("US24", null, fam, "Family has the same husband (" + fam.HusbandId +
-						") and wife (" + fam.WifeId + ") as family " + table.get(key));
+				log.error("US24", null, fam, "Family has the same husband (" + fam.HusbandId + ") and wife ("
+						+ fam.WifeId + ") as family " + table.get(key));
 			} else {
 				table.put(key, fam.Id);
 			}
@@ -382,9 +414,8 @@ public class FamilyValidator implements IValidator {
 		}
 		return valid;
 	}
-	
-	
-	private List<Individual> insertionSortByBirthday(List<Individual> people){
+
+	private List<Individual> insertionSortByBirthday(List<Individual> people) {
 		int count = people.size();
 		int oldestIndex = -1;
 		Date oldestBirthday;
@@ -413,8 +444,8 @@ public class FamilyValidator implements IValidator {
 		}
 		return sorted;
 	}
-	
-	//US21
+
+	// US21
 	public boolean genderRole2() {
 		String userStory = "US21";
 		boolean valid = true;
@@ -438,8 +469,8 @@ public class FamilyValidator implements IValidator {
 		return valid;
 
 	}
-	
-	//US30
+
+	// US30
 	public void listLivingMarried() {
 		String userStory = "US30";
 		for (Family fam : familyList) {
@@ -455,8 +486,8 @@ public class FamilyValidator implements IValidator {
 			}
 		}
 	}
-	
-	//US32
+
+	// US32
 	public void listMultipleBirths() {
 		for (Family fam : familyList) {
 			List<Individual> children = repository.GetChildrenOfFamily(fam);
@@ -478,43 +509,43 @@ public class FamilyValidator implements IValidator {
 				Individual[] tempChildren = children.toArray(new Individual[0]);
 				// Group the oldest remaining sibling with all siblings born up to a day later
 				for (Individual child : tempChildren) {
-					if(child.Birthday.after(maxTwinBirthday)) {
-						//If the child is born over a day later, they start a new group
+					if (child.Birthday.after(maxTwinBirthday)) {
+						// If the child is born over a day later, they start a new group
 						break;
 					}
 					simultaneousBirths.add(child);
 					children.remove(child);
 				}
 				if (simultaneousBirths.size() > 1) {
-					log.info("US32", null, fam, "Family has multiple simultaneous births: " + Individual.ListPeople(simultaneousBirths));
+					log.info("US32", null, fam,
+							"Family has multiple simultaneous births: " + Individual.ListPeople(simultaneousBirths));
 				}
 			}
 		}
 	}
-	
-	//US34
+
+	// US34
 	public void listCreepyMarriages() {
-		for (Family fam: familyList) {
-			if(fam.Married == null) {
+		for (Family fam : familyList) {
+			if (fam.Married == null) {
 				continue;
 			}
 			Individual husband = repository.GetParentOfFamily(fam, Spouse.Husband);
 			Individual wife = repository.GetParentOfFamily(fam, Spouse.Wife);
-			if(husband == null || wife == null) {
+			if (husband == null || wife == null) {
 				continue;
 			}
-			if(husband.Birthday == null | wife.Birthday == null) {
+			if (husband.Birthday == null | wife.Birthday == null) {
 				continue;
 			}
 			long husbandAgeAtMarriage = fam.Married.getTime() - husband.Birthday.getTime();
 			long wifeAgeAtMarriage = fam.Married.getTime() - wife.Birthday.getTime();
-			if(husbandAgeAtMarriage >= wifeAgeAtMarriage * 2) {
-				log.info("US34", null, fam, "Husband " + husband.NameAndId() + " married " + wife.NameAndId() +
-						" who was half his age or younger");
-			}
-			else if(wifeAgeAtMarriage >= husbandAgeAtMarriage * 2) {
-				log.info("US34", null, fam, "Wife " + wife.NameAndId() + " married " + husband.NameAndId() +
-						" who was half her age or younger");
+			if (husbandAgeAtMarriage >= wifeAgeAtMarriage * 2) {
+				log.info("US34", null, fam, "Husband " + husband.NameAndId() + " married " + wife.NameAndId()
+						+ " who was half his age or younger");
+			} else if (wifeAgeAtMarriage >= husbandAgeAtMarriage * 2) {
+				log.info("US34", null, fam, "Wife " + wife.NameAndId() + " married " + husband.NameAndId()
+						+ " who was half her age or younger");
 			}
 		}
 	}
@@ -536,6 +567,9 @@ public class FamilyValidator implements IValidator {
 			allTestsValid = false;
 		}
 		if (!validateChildBirthdays()) {
+			allTestsValid = false;
+		}
+		if (!userStory10()) {
 			allTestsValid = false;
 		}
 		if (!noMoreThanFifteenSiblings()) {
@@ -562,7 +596,7 @@ public class FamilyValidator implements IValidator {
 		if (!siblingsShouldNotMarry()) {
 			allTestsValid = false;
 		}
-        listLivingMarried();
+		listLivingMarried();
 		listMultipleBirths();
 		listCreepyMarriages();
 		return allTestsValid;
