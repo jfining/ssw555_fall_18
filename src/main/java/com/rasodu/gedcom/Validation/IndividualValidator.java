@@ -7,6 +7,7 @@ import com.rasodu.gedcom.core.Family;
 import com.rasodu.gedcom.core.IGedcomRepository;
 import com.rasodu.gedcom.core.Individual;
 import com.rasodu.gedcom.core.Spouse;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -230,6 +231,18 @@ public class IndividualValidator implements IValidator {
 		return valid;
 	}
 
+	// US29
+    public boolean printDeceased() {
+	    boolean valid = true;
+	    for(Individual ind : repository.GetAllIndividuals()){
+	        if(ind.Death != null){
+	            valid = false;
+	            log.info("US29", ind, null, ind.Id + " is Deceased");
+            }
+        }
+        return valid;
+    }
+
 	// US35
 
 	private boolean recentBirths() {
@@ -299,6 +312,9 @@ public class IndividualValidator implements IValidator {
 		if (!validateIdUniqueness()) {
 			allTestsValid = false;
 		}
+		if (!printDeceased()){
+		    allTestsValid = false;
+        }
 		if (!recentBirths()) {
 			allTestsValid = false;
 		}
