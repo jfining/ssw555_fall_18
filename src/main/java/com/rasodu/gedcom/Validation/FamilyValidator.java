@@ -134,24 +134,24 @@ public class FamilyValidator implements IValidator {
 	// US10
 
 	private boolean userStory10() {
-		String userStory = "US10";
 		boolean valid = true;
-		Date today = new Date();
 
 		for (Family fam : familyList) {
 			if (fam.Id != null) {
 				if (fam.Married != null) {
 				Individual husband = repository.GetParentOfFamily(fam, Spouse.Husband);
 				Individual wife = repository.GetParentOfFamily(fam, Spouse.Wife);
-				if ((husband != null && husband.Birthday != null) || (wife != null && wife.Birthday !=null)) {
+				if ((husband != null && husband.Birthday != null)) {
 					long husDiff = fam.Married.getTime() - husband.Birthday.getTime();
-					long wifeDiff = fam.Married.getTime() - wife.Birthday.getTime();
 					float husYearsBetween = (husDiff / (1000 * 60 * 60 * 24 * 365));
-					float wifeYearsBetween = (wifeDiff / (1000 * 60 * 60 * 24 * 365));
 					if (husYearsBetween < 14) {
 						log.error("US10", husband, fam, "Husband married before 14");
 						valid = false;
 					}
+				}
+				if (wife != null && wife.Birthday !=null) {
+					long wifeDiff = fam.Married.getTime() - wife.Birthday.getTime();
+					float wifeYearsBetween = (wifeDiff / (1000 * 60 * 60 * 24 * 365));
 					if (wifeYearsBetween < 14) {
 						log.error("US10", wife, fam, "Wife married before 14");
 						valid = false;
