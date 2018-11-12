@@ -486,6 +486,33 @@ public class FamilyValidator implements IValidator {
 			}
 		}
 	}
+	
+	//US31
+	public void listLivingNeverMarried() {
+		String userStory = "US31";
+		List<String> wasMarried = new ArrayList<String>();
+		for (Family fam : familyList) {
+			Individual husband = repository.GetIndividual(fam.HusbandId);
+			Individual wife = repository.GetIndividual(fam.WifeId);
+			wasMarried.add(husband.Id);
+			wasMarried.add(wife.Id);
+		}
+		for (Individual ind : individualList) {
+			System.out.println("" + ind.Id);
+			if (wasMarried.contains(ind.Id)) {
+				continue;
+			}
+			else {
+				System.out.println("indi not married: " + ind.Id);
+				Calendar calendar  = Calendar.getInstance();
+				calendar.add(Calendar.YEAR, -30);
+				Date thirtyYearsAgo = calendar.getTime();
+				if (ind.Birthday.before(thirtyYearsAgo)) {
+					log.info(userStory, ind, null, "Individual was never married.");
+				}
+			}
+		}
+	}
 
 	// US32
 	public void listMultipleBirths() {
