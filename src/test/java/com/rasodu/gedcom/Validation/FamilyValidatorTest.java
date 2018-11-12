@@ -391,4 +391,18 @@ public class FamilyValidatorTest extends ValidatorLoader {
         verify(logger, Mockito.times(1)).info("US30", repository.GetIndividual("US30_IID3"), repository.GetFamily("US30_FID2"), "Individual is alive and married.");
         verifyNoMoreInteractions(logger);
     }
+    
+    //US31
+    @Test
+    public void listLivingNeverMarriedTest() {
+    	//arrange
+        GedLogger logger = mock(GedLogger.class);
+        Load("test_us31", logger);
+        //act
+        fv.listLivingNeverMarried();
+        //assert
+        verify(logger, Mockito.times(1)).info("US31", repository.GetIndividual("US31_IID3"), null, "Individual was never married.");
+        verify(logger, Mockito.times(1)).info("US31", repository.GetIndividual("US31_IID4"), null, "Individual was never married.");
+        verifyNoMoreInteractions(logger);
+    }
 }
